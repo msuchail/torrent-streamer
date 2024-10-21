@@ -1,0 +1,34 @@
+services:
+    web:
+        container_name: portfolio
+        env_file:
+            - .env
+        image: ghcr.io/msuchail/portfolio
+        networks:
+            - default
+            - caddy
+        restart: unless-stopped
+        depends_on:
+            - mysql
+            - transmission
+
+    mysql:
+        env_file:
+            - .env
+        image: mysql
+        restart: unless-stopped
+        networks:
+            - default
+        volumes:
+            - ./data:/var/lib/mysql
+
+    redis:
+        image: redis
+        restart: unless-stopped
+        networks:
+            - default
+
+networks:
+    default:
+    caddy:
+        external: true
