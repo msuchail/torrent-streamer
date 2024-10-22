@@ -1,16 +1,19 @@
 services:
     web:
-        container_name: portfolio
+        container_name: torrentstream
         env_file:
             - .env
-        image: ghcr.io/msuchail/portfolio
+        image: ghcr.io/msuchail/torrentstream
         networks:
             - default
             - caddy
         restart: unless-stopped
+        volumes:
+            - ./download:/var/www/html/download
         depends_on:
             - mysql
             - transmission
+            - redis
 
     mysql:
         env_file:
@@ -20,13 +23,17 @@ services:
         networks:
             - default
         volumes:
-            - ./data:/var/lib/mysql
+            - ./mysql-data:/var/lib/mysql
 
     redis:
         image: redis
         restart: unless-stopped
         networks:
             - default
+        ports:
+            - '${FORWARD_REDIS_PORT:-6379}:6379'
+        volumes:
+            -   ./redis-data:/data
 
 networks:
     default:
