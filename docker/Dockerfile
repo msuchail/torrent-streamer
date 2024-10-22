@@ -2,7 +2,7 @@ FROM node:22.9 as nodebuilder
 
 WORKDIR /app
 COPY . .
-RUN rm -rf node_modules storage/app vendor composer.lock .env package-lock.json
+RUN rm -rf node_modules storage/app vendor composer.lock .env package-lock.json public/hot
 
 RUN npm install
 RUN npm run build
