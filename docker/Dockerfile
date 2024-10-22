@@ -24,6 +24,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 # Install PHP extensions
 RUN apt update && apt install -y \
+    screen \
     default-mysql-client \
     systemctl \
     libicu-dev \
@@ -35,4 +36,4 @@ RUN docker-php-ext-install pdo_mysql intl
 
 RUN composer install --no-dev
 
-CMD service nginx start && php-fpm && screen -d -m php artisan queue:work --timeout=3600
+CMD service nginx start && screen -d -m php artisan queue:work --timeout=3600 && php-fpm
