@@ -32,7 +32,6 @@ class MovieResource extends Resource
                     ->image()
                     ->directory('images')
                     ->previewable()
-                    ->maxSize(1024 * 10)
                     ->imageCropAspectRatio('16:9')
                     ->required(),
                 Forms\Components\TextInput::make('title')
