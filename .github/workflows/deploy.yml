@@ -5,43 +5,31 @@ on:
     branches: [ "master" ]
 
 env:
-  # Use docker.io for Docker Hub if empty
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.actor }}/torrentstream:latest
   CONTAINER_NAME: torrentstream
   WORK_DIR: torrentstream
 
 jobs:
   publish:
     environment: prod
-    name: publish image
+    name: deploy to prod
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
-      - name: Login
-        run: |
-          echo ${{ secrets.PAT }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-      - name: Build and Publish
-        run: |
-          docker build . --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} --file docker/Dockerfile
-          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-
-  deploy:
-    environment: prod
-    needs: publish
-    name: deploy image
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: install ssh keys
-        # check this thread to understand why its needed:
-        # <https://stackoverflow.com/a/70447517>
-        run: |
-          install -m 600 -D /dev/null ~/.ssh/id_rsa
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
-      - name: connect and pull
-        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ env.WORK_DIR }} && docker compose pull && docker compose up -d && docker exec ${{ env.CONTAINER_NAME }} php artisan migrate --force && exit"
-      - name: cleanup
-        run: rm -rf ~/.ssh
+      - name: SSH-Compose
+        # You may pin to the exact commit or the version.
+        # uses: matiasnu/github-action-ssh-docker-compose@7fb3aa789f898b63c3722e6beb2dafa1a70f0e22
+        uses: matiasnu/github-action-ssh-docker-compose@v2.0.3
+        with:
+          # Private SSH key used for logging into remote system.
+          ssh_private_key: ${env.SSH_PRIVATE_KEY}
+          # Remote host name.
+          ssh_host: ${env.SSH_HOST}
+          # Remote user name.
+          ssh_user: ${env.SSH_USER}
+          # Prefix for docker compose containers.
+          docker_compose_prefix: docker
+          
+          docker_compose_filename: docker-compose.yml
+          # Execute docker compose-down ("true" or "false").
+          docker_compose_down: true
+          
