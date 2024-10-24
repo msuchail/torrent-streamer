@@ -21,6 +21,5 @@ RUN install-php-extensions intl &&\
 USER www-data
 
 RUN composer install
-RUN php artisan optimize:clear
 
 ENV AUTORUN_ENABLED=true
