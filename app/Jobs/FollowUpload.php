@@ -6,28 +6,11 @@ use App\Models\Movie;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Storage;
-use Transmission\Model\Torrent;
 use TransmissionPHP\Facades\Transmission;
 
 class FollowUpload implements ShouldQueue
 {
     use Queueable;
-
-
-    /**
-     * Determine number of times the job may be attempted.
-     */
-    public function tries(): int
-    {
-        return 5;
-    }
-    /**
-     * Determine the time at which the job should timeout.
-     */
-    public function retryUntil(): \Illuminate\Support\Carbon
-    {
-        return now()->addMinutes(60);
-    }
 
 
     /**
@@ -44,29 +27,44 @@ class FollowUpload implements ShouldQueue
     public function handle(): void
     {
         $torrent = Transmission::get($this->movie->torrent_id);
-
-
-        $this->movie->update([
-            'filename' => $torrent->getName(),
-        ]);
+        $path = "downloads/complete/{$this->movie->title}/";
 
         do {
-            $this->movie->update(['status', $torrent->getPercentDone()]);
             sleep(5);
-        } while (!Storage::disk('public')->exists('download/complete/'.$torrent->getName()));
+        } while (!Storage::disk('public')->exists("downloads/complete/{$this->movie->title}"));
 
-
-        $baseFile = Storage::disk('public')->path("download/complete/{$torrent->getName()}");
-        $newFile = str_replace('.mkv', '.mp4', $baseFile);
-
-
-        shell_exec("ffmpeg -i $baseFile  -codec copy $newFile");
-
-        $torrent = Transmission::get($this->movie->torrent_id);
         Transmission::remove($torrent);
+        Storage::delete($this->movie->torrent);
 
-        Storage::delete('download/complete/'.$torrent->getName());
 
-        $this->movie->update(['status' => 'done', 'filename' => collect(explode('/',$newFile))->last()]);
+
+        $allFiles = collect(Storage::disk('public')->files(directory: $path, recursive: true));
+
+        $isFirst = true;
+        $file = $allFiles->filter(function($file) use (&$isFirst, &$keep) {
+            if (!$isFirst) {
+                Storage::disk('public')->delete($file);
+                return false;
+            }
+
+            $ext = collect(explode('.', $file))->last();
+            if(in_array($ext, ['mkv', 'avi', 'mov'])) {
+                $isFirst = false;
+                $newFile = explode('.', $file);
+                array_pop($newFile);
+                $newFile = implode('.', $newFile). '.mp4';
+                shell_exec("ffmpeg -i 'storage/app/public/$file'  -codec copy 'storage/app/public/$newFile' -y");
+                $this->movie->update(['status' => 'done', 'filename' => $newFile]);
+                Storage::disk('public')->delete($file);
+                return true;
+            } elseif ($ext === 'mp4') {
+                $isFirst = false;
+                return true;
+            } else {
+                Storage::disk('public')->delete($file);
+                return false;
+            }
+        })->first();
+
     }
 }

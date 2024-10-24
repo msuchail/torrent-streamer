@@ -9,7 +9,7 @@
         "filament/filament": "^3.2",
         "laravel-frontend-presets/tall": "^8.0",
         "laravel/framework": "^11.9",
-        "laravel/tinker": "^2.9",
+        "laravel/tinker": "^2.10",
         "livewire/livewire": "^3.5",
         "rajurayhan/larastreamer": "^1.0",
         "zloadmin/laravel-transmission-php": "dev-master"

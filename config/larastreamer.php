@@ -1,5 +1,5 @@
 <?php
 
     return [
-        'basepath' => storage_path('app/public/download/complete'),
+        'basepath' => storage_path('app/public/downloads/complete'),
     ];

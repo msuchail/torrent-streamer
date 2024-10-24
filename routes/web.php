@@ -37,7 +37,7 @@ Route::get('password/reset/{token}', Reset::class)
 
 Route::middleware('auth')->group(function () {
     Route::get('/', \App\Livewire\Home::class)->name('home');
-    Route::get('/stream/{filename}', 'Raju\Streamer\Controllers\StreamController@stream')->name('stream');
+    Route::get('/stream/{moviename}/{filename}', 'App\Http\Controllers\StreamController@stream')->name('videostream');
     Route::get('email/verify', Verify::class)
         ->middleware('throttle:6,1')
         ->name('verification.notice');

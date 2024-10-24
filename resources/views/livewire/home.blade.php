@@ -31,8 +31,8 @@
             @teleport('body')
             <div class="fixed top-0 left-0 h-screen w-full bg-black/50 flex justify-center items-center" wire:keydown.escape="closeMovie" wire:click="closeMovie">
                 <div class="w-2/3 aspect-video">
-                    <video class="rounded-xl w-full" src="{{ route('stream', ['filename' => $selectedMovie->filename]) }}" autoplay controls />
-
+                    @php($filename = collect(explode('/', $selectedMovie->filename))->last())
+                    <video class="rounded-xl w-full" src="{{ route('videostream', ['filename' => $filename, 'moviename' => $selectedMovie->title])}}" autoplay controls />
                 </div>
             </div>
             @endteleport

@@ -9,8 +9,8 @@ services:
         volumes:
             - ./config:/config
             - ./watch:/watch
-            - ./storage/app/private:/torrents
-            - ./storage/app/public/download:/downloads
+            - ./storage/app/private/torrents:/torrents
+            - ./storage/app/public/downloads:/downloads
         ports:
             - 9091:9091
             - 51413:51413

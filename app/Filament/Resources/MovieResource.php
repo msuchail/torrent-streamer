@@ -25,6 +25,7 @@ class MovieResource extends Resource
             ->schema([
                 Forms\Components\FileUpload::make('torrent')
                     ->disk('local')
+                    ->directory('torrents')
                     ->acceptedFileTypes(['application/x-bittorrent'])
                     ->required(),
                 Forms\Components\FileUpload::make('image')
@@ -32,7 +33,6 @@ class MovieResource extends Resource
                     ->image()
                     ->directory('images')
                     ->previewable()
-                    ->maxSize(1024 * 10)
                     ->imageCropAspectRatio('16:9')
                     ->required(),
                 Forms\Components\TextInput::make('title')

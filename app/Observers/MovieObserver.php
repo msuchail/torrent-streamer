@@ -15,7 +15,7 @@ class MovieObserver
      */
     public function created(Movie $movie): void
     {
-        $torrent = Transmission::add('/torrents/'.$movie->torrent);
+        $torrent = Transmission::add(torrent: '/'.$movie->torrent, savepath: '/downloads/complete/'.$movie->title );
 
         $movie->update([
             'torrent_id' => $torrent->getId(),
@@ -36,10 +36,16 @@ class MovieObserver
      */
     public function deleted(Movie $movie): void
     {
+        try {
+            $torrent = Transmission::get($movie->torrent_id ?? 0);
+            Transmission::remove($torrent);
+        } catch (\Exception $e) {
+            //
+        }
+
         Storage::delete($movie->torrent);
-        Storage::disk('public')->delete('download/complete/'.$movie->filename);
-        Storage::disk('public')->delete('download/incomplete/'.$movie->filename);
-//        Transmission::get($movie->hash)->remove();
+        Storage::disk('public')->deleteDirectory('downloads/complete/'.$movie->title);
+        Storage::disk('local')->delete($movie->image);
     }
 
     /**

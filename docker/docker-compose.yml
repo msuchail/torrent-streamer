@@ -1,41 +1,83 @@
 services:
+    transmission:
+        image: linuxserver/transmission
+        container_name: transmission
+        environment:
+            PUID: 33
+            PGID: 33
+            TZ: 'Europe/London'
+        volumes:
+            - ./storage/private/torrents:/torrents
+            - ./storage/public/downloads:/downloads
+        ports:
+            - 9091:9091
+            - 51413:51413
+            - 51413:51413/udp
+        restart: no
+
     web:
         container_name: torrentstream
         env_file:
             - .env
-        image: ghcr.io/msuchail/torrentstream
+        build:
+            context: ..
+            dockerfile: docker/Dockerfile
         networks:
             - default
-            - caddy
-        restart: unless-stopped
+        restart: no
         volumes:
-            - ./download:/var/www/html/download
+            - ./storage:/var/www/html/storage/app
         depends_on:
-            - mysql
-            - transmission
-            - redis
+            transmission:
+                condition: service_started
+            mysql:
+                condition: service_healthy
+        ports:
+            -   80:8080
+
+
+    queue:
+        deploy:
+            mode: replicated
+            replicas: 2
+        env_file:
+            - .env
+        build:
+            context: ..
+            dockerfile: docker/Dockerfile
+        networks:
+            - default
+        restart: no
+        volumes:
+            - ./storage:/var/www/html/storage/app
+        depends_on:
+            transmission:
+                condition: service_started
+            mysql:
+                condition: service_healthy
+        stop_signal: SIGTERM
+        healthcheck:
+            # This is our native healthcheck script for the queue
+            test: [ "CMD", "healthcheck-queue" ]
+            start_period: 10s
+        command: php artisan queue:work --timeout=1200
 
     mysql:
+        ports:
+            -   3306:3306
         env_file:
             - .env
         image: mysql
-        restart: unless-stopped
+        restart: no
         networks:
             - default
         volumes:
             - ./mysql-data:/var/lib/mysql
-
-    redis:
-        image: redis
-        restart: unless-stopped
-        networks:
-            - default
-        ports:
-            - '${FORWARD_REDIS_PORT:-6379}:6379'
-        volumes:
-            -   ./redis-data:/data
+        healthcheck:
+            test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+            timeout: 20s
+            retries: 10
 
 networks:
     default:
-    caddy:
-        external: true
+
