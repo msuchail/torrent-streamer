@@ -37,10 +37,11 @@ class MovieResource extends Resource
                     ->required(),
                 Forms\Components\TextInput::make('title')
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(50),
                 Forms\Components\Textarea::make('description')
                     ->autosize()
                     ->rows(5)
+                    ->maxLength(500)
                     ->required(),
                 Forms\Components\Select::make('groupes')
                     ->relationship(titleAttribute: 'name')
@@ -61,8 +62,6 @@ class MovieResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('torrent')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('title')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('status')
