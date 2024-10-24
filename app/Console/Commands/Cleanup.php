@@ -28,8 +28,7 @@ class Cleanup extends Command
      */
     public function handle()
     {
-        Storage::disk('public')->deleteDirectory('downloads/incomplete/*');
-        Storage::disk('public')->delete('downloads/incomplete/*');
+        Storage::disk('public')->deleteDirectory('downloads/incomplete');
         Movie::whereNot('status', 'done')->delete();
 
         $completed = collect(Storage::disk('public')->directories('downloads/complete'));

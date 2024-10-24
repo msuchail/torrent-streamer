@@ -12,7 +12,6 @@ class Home extends Component
 {
     public Collection $movies;
     public Movie|null $selectedMovie;
-    public bool $showModal = false;
 
     public function render()
     {
@@ -28,13 +27,5 @@ class Home extends Component
     public function setMovie(Movie $movie)
     {
         $this->selectedMovie = $movie;
-    }
-
-    public function watchMovie()
-    {
-        $this->showModal = true;
-    }
-    public function closeMovie() {
-        $this->showModal = false;
     }
 }

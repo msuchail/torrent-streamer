@@ -1,7 +1,6 @@
-<div>
+<div x-data="home">
     <x-slot name="title">TorrentStream</x-slot>
     @isset($selectedMovie)
-
         <div class="grid grid-cols-12 gap-12" wire:keydown.escape="closeMovie">
             <div class="col-span-4 bg-slate-800/50 p-5 rounded-2xl">
                 <h2>Détails du film</h2>
@@ -10,7 +9,7 @@
                 <p>{{ $selectedMovie->description }}</p>
                 <div class="flex justify-end">
                     <button
-                        wire:click="watchMovie"
+                        x-on:click="watchMovie"
                         class="px-3 py-1.5 text-sm text-white duration-150 bg-indigo-600 rounded-full hover:bg-indigo-500 active:bg-indigo-700"
                     >
                         Regarder
@@ -27,19 +26,34 @@
             </div>
         </div>
 
-        @if($showModal)
-            @teleport('body')
-            <div class="fixed top-0 left-0 h-screen w-full bg-black/50 flex justify-center items-center" wire:keydown.escape="closeMovie" wire:click="closeMovie">
+        <template x-if="open" >
+            <div class="fixed top-0 left-0 h-screen w-full bg-black/50 flex justify-center items-center" x-on:click="closeMovie">
                 <div class="w-2/3 aspect-video">
                     @php($filename = collect(explode('/', $selectedMovie->filename))->last())
-                    <video class="rounded-xl w-full" src="{{ route('videostream', ['filename' => $filename, 'moviename' => $selectedMovie->title])}}" autoplay controls />
+                    <video id="video" class="rounded-xl w-full video-js vjs-theme-city" src="{{ route('videostream', ['filename' => $filename, 'moviename' => $selectedMovie->title])}}" autoplay controls />
                 </div>
             </div>
-            @endteleport
-        @endif
+        </template>
+
     @else
         <x-ui.alert-warning title="Aucun film disponible actuellement">
             Il n'y a aucun film disponible actuellement, veuillez réessayer plus tard.
         </x-ui.alert-warning>
     @endisset
 </div>
+
+@script
+<script>
+    Alpine.data('home', () => ({
+        open: false,
+
+        closeMovie() {
+            document.getElementById('video').src = '';
+            this.open = false;
+        },
+        watchMovie() {
+            this.open = true;
+        },
+    }));
+</script>
+@endscript
