@@ -19,4 +19,3 @@
 import videojs from "video.js";
 window.videojs = videojs;
 import "video.js/dist/video-js.css";
-import '@filmgardi/videojs-subtitle-settings'
