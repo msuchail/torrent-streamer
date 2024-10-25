@@ -20,7 +20,6 @@
         "vite": "^5.0"
     },
     "dependencies": {
-        "@filmgardi/videojs-subtitle-settings": "^2.0.10",
-        "plyr": "^3.7.8"
+        "videojs-settings-menu": "^0.0.2"
     }
 }

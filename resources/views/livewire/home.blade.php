@@ -27,13 +27,10 @@
                 </div>
             </div>
         </div>
-        <template x-if="open" wire:key="{{ $selectedMovie->id }}">
+        <template x-if="open">
             <div class="fixed top-0 left-0 h-screen w-full bg-black/50 flex justify-center items-center" x-on:click="closeMovie">
-                <div class="fixed w-2/3 aspect-video" x-on:click.stop="">
-                    <video id="video" autoplay controls class="rounded-xl w-full video-js" src="{{  $this->videoUrl }}" />
+                <div class="fixed w-2/3" x-on:click.stop="" id="video-container">
                 </div>
-                <!-- Sélecteur pour les sous-titres -->
-
             </div>
         </template>
     @else
@@ -41,32 +38,47 @@
             Il n'y a aucun film disponible actuellement, veuillez réessayer plus tard.
         </x-ui.alert-warning>
     @endisset
-</div>
-
 @script
 <script>
     Alpine.data('home', () => ({
         open: false,
+        changeMe: 0,
 
         closeMovie() {
-            document.getElementById('video').src = "";
+            videojs('video').dispose();
             this.open = false;
         },
         watchMovie() {
             this.open = true;
 
-            setInterval(() => {
+            setTimeout(() => {
                 this.initPlayer();
             }, 1);
         },
 
         initPlayer() {
-            const player = new Videojs('#video')
-            player.subtitleSettings()
+            const video = document.createElement('video');
+            video.setAttribute('id', 'video');
+            video.setAttribute(
+                'class',
+                'w-full video-js rounded-xl',
+            );
 
-            // const player = new Plyr('#video', {
-            //     captions: { active: true, update: true }
-            // });
+            document.getElementById('video-container').append(video);
+
+
+            const player = videojs('video', {
+                autoplay: true,
+                controls: true,
+                language: 'fr',
+                playbackRates: [0.5, 1, 1.5, 2],
+                sources: [
+                    {
+                        src: $wire.videoUrl,
+                        type: 'video/mp4',
+                    },
+                ],
+            })
         },
 
     }));

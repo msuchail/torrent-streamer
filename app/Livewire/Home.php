@@ -13,13 +13,7 @@ class Home extends Component
 {
     public Collection $movies;
     public Movie|null $selectedMovie;
-
-    #[Computed]
-    public function videoUrl()
-    {
-        $filename = collect(explode('/', $this->selectedMovie->filename))->last();
-        return route('videostream', ['filename' => $filename, 'moviename' => $this->selectedMovie->title]);
-    }
+    public string $videoUrl;
 
     public function render()
     {
@@ -30,11 +24,19 @@ class Home extends Component
     {
         $this->movies = Movie::active()->get();
         $this->selectedMovie = $this->selectedMovie ?? $this->movies->first();
+        $this->setVideoUrl();
     }
 
     public function setMovie(Movie $movie)
     {
         $this->selectedMovie = $movie;
+        $this->setVideoUrl();
+    }
+
+    private function setVideoUrl()
+    {
+        $filename = collect(explode('/', $this->selectedMovie->filename))->last();
+        $this->videoUrl = route('videostream', ['filename' => $filename, 'moviename' => $this->selectedMovie->title]);
     }
 
 

@@ -15,10 +15,8 @@
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     forceTLS: true
 // });
-import Plyr from "plyr";
-import "plyr/dist/plyr.css";
-window.Plyr = Plyr;
 
-import "video.js/dist/video.js";
+import videojs from "video.js";
+window.videojs = videojs;
 import "video.js/dist/video-js.css";
 import '@filmgardi/videojs-subtitle-settings'
