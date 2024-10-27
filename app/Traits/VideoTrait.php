@@ -20,9 +20,9 @@ trait VideoTrait
         private readonly Movie $movie,
         private readonly int   $segmentDuration = 60
     ){
-        $this->storagePath = "downloads/complete/{$this->movie->title}";
-        $this->hlsFormat = "-codec copy -f hls -hls_time $this->segmentDuration -hls_list_size 0";
-        $this->path = "storage/app/public/downloads/complete/{$this->movie->title}";
+        $this->storagePath = "downloads/complete/{$this->movie->id}";
+        $this->hlsFormat = "-f hls -hls_time $this->segmentDuration -hls_list_size 0";
+        $this->path = "storage/app/public/downloads/complete/{$this->movie->id}";
     }
 
 
@@ -37,7 +37,9 @@ trait VideoTrait
     public function convertVideo(): void
     {
         Storage::disk('public')->makeDirectory("$this->storagePath/video");
-        shell_exec("ffmpeg -i '$this->baseFile' -map 0:v:0 $this->hlsFormat '{$this->path}/video/prog_index.m3u8' -y");
+        error_log($this->baseFile);
+        error_log($this->path);
+        shell_exec("ffmpeg -i '$this->baseFile' -map 0:v:0 -c:v copy $this->hlsFormat '{$this->path}/video/prog_index.m3u8' -y");
 
         $this->master .= "\n#EXT-X-STREAM-INF:AUDIO=\"stereo\",SUBTITLES=\"subs\"\nvideo/prog_index.m3u8\n";
 
@@ -48,7 +50,7 @@ trait VideoTrait
         Storage::disk('public')->makeDirectory("$this->storagePath/audio");
         for ($i = 0; $i < 5; $i++) {
             Storage::disk('public')->makeDirectory("$this->storagePath/audio/$i");
-            shell_exec("ffmpeg -i '$this->baseFile' -map 0:a:$i $this->hlsFormat '{$this->path}/audio/$i/prog_index.m3u8' -y");
+            shell_exec("ffmpeg -i '$this->baseFile' -map 0:a:$i -c:a aac $this->hlsFormat '{$this->path}/audio/$i/prog_index.m3u8' -y");
 
             if(Storage::disk('public')->exists("$this->storagePath/audio/$i/prog_index.m3u8")) {
                 // On récupère le nom de la langue

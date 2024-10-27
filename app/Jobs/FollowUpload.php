@@ -48,7 +48,7 @@ class FollowUpload implements ShouldQueue
             }
         })->first();
 
-        Storage::disk('public')->move($file, $this->movie->storagePath.'/'.collect(explode('/', $file))->last());
+        Storage::disk('public')->move($file, $this->movie->storagePath.'/input.'.collect(explode('.', $file))->last());
         $file = collect(Storage::disk('public')->files(directory: $this->storagePath, recursive: false))->first();
         $this->baseFile = $this->path. '/' . collect(explode('/', $file))->last();
 

@@ -29,8 +29,9 @@ class Home extends Component
         $this->fill([
             'movies' => Movie::active()->get(),
         ]);
-        $this->setMovie($this->movies->first());
-
+        if($this->movies->isNotEmpty()) {
+            $this->setMovie($this->movies->first());
+        }
     }
 
     public function setMovie(Movie $movie)

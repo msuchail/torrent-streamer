@@ -27,13 +27,13 @@ class Movie extends Model
     public function videoUrl(): Attribute
     {
         return new Attribute(function () {
-            return Storage::disk('public')->url("downloads/complete/{$this->title}/master.m3u8");
+            return Storage::disk('public')->url("downloads/complete/{$this->id}/master.m3u8");
         });
     }
     public function storagePath(): Attribute
     {
         return new Attribute(function () {
-            return "downloads/complete/{$this->title}";
+            return "downloads/complete/{$this->id}";
         });
     }
 }

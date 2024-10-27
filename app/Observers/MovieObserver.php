@@ -15,7 +15,7 @@ class MovieObserver
      */
     public function created(Movie $movie): void
     {
-        $torrent = Transmission::add(torrent: '/'.$movie->torrent, savepath: '/downloads/complete/'.$movie->title);
+        $torrent = Transmission::add(torrent: '/'.$movie->torrent, savepath: '/downloads/complete/'.$movie->id);
 
         $movie->update([
             'torrent_id' => $torrent->getId(),
@@ -47,7 +47,7 @@ class MovieObserver
         }
 
         Storage::delete($movie->torrent);
-        Storage::disk('public')->deleteDirectory('downloads/complete/'.$movie->title);
+        Storage::disk('public')->deleteDirectory('downloads/complete/'.$movie->id);
         Storage::disk('local')->delete($movie->image);
     }
 
