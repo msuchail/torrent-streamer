@@ -18,7 +18,7 @@ class FollowUpload implements ShouldQueue
      */
     public function handle(): void
     {
-        try {
+/*        try {
             $torrent = Transmission::get($this->movie->torrent_id);
             do {
                 $this->movie->update(['status' => 'downloading '. ($torrent->getPercentDone()) . '%']);
@@ -28,7 +28,7 @@ class FollowUpload implements ShouldQueue
             Storage::delete($this->movie->torrent);
         } catch (\Exception $e) {
             return;
-        }
+        }*/
 
         $allFiles = collect(Storage::disk('public')->files(directory: $this->storagePath, recursive: true));
 

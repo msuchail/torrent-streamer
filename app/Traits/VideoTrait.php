@@ -50,7 +50,7 @@ trait VideoTrait
         Storage::disk('public')->makeDirectory("$this->storagePath/audio");
         for ($i = 0; $i < 5; $i++) {
             Storage::disk('public')->makeDirectory("$this->storagePath/audio/$i");
-            shell_exec("ffmpeg -i '$this->baseFile' -map 0:a:$i -c:a aac $this->hlsFormat '{$this->path}/audio/$i/prog_index.m3u8' -y");
+            shell_exec("ffmpeg -i '$this->baseFile' -map 0:a:$i -c:a copy $this->hlsFormat '{$this->path}/audio/$i/prog_index.m3u8' -y");
 
             if(Storage::disk('public')->exists("$this->storagePath/audio/$i/prog_index.m3u8")) {
                 // On récupère le nom de la langue

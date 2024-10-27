@@ -62,7 +62,7 @@
             video.setAttribute('id', 'video');
             video.setAttribute(
                 'class',
-                'w-full video-js vjs-theme-fantasy rounded-xl',
+                'w-full video-js rounded-xl',
             );
 
             document.getElementById('video-container').append(video);
