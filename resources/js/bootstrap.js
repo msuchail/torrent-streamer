@@ -18,4 +18,8 @@
 
 import videojs from "video.js";
 window.videojs = videojs;
+
+
 import "video.js/dist/video-js.css";
+import '@videojs/themes/dist/fantasy/index.css';
+

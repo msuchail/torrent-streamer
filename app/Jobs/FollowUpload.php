@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Models\Movie;
+use App\Traits\VideoTrait;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Storage;
@@ -11,34 +11,26 @@ use TransmissionPHP\Facades\Transmission;
 class FollowUpload implements ShouldQueue
 {
     use Queueable;
-
-
-    /**
-     * Create a new job instance.
-     */
-    public function __construct(public Movie $movie)
-    {
-        //
-    }
+    use VideoTrait;
 
     /**
      * Execute the job.
      */
     public function handle(): void
     {
-        $torrent = Transmission::get($this->movie->torrent_id);
-        $path = "downloads/complete/{$this->movie->title}/";
+        try {
+            $torrent = Transmission::get($this->movie->torrent_id);
+            do {
+                $this->movie->update(['status' => 'downloading '. ($torrent->getPercentDone()) . '%']);
+                sleep(2);
+            } while (!Storage::disk('public')->exists($this->storagePath));
+            Transmission::remove($torrent);
+            Storage::delete($this->movie->torrent);
+        } catch (\Exception $e) {
+            return;
+        }
 
-        do {
-            sleep(5);
-        } while (!Storage::disk('public')->exists("downloads/complete/{$this->movie->title}"));
-
-        Transmission::remove($torrent);
-        Storage::delete($this->movie->torrent);
-
-
-
-        $allFiles = collect(Storage::disk('public')->files(directory: $path, recursive: true));
+        $allFiles = collect(Storage::disk('public')->files(directory: $this->storagePath, recursive: true));
 
         $isFirst = true;
         $file = $allFiles->filter(function($file) use (&$isFirst, &$keep) {
@@ -46,18 +38,8 @@ class FollowUpload implements ShouldQueue
                 Storage::disk('public')->delete($file);
                 return false;
             }
-
             $ext = collect(explode('.', $file))->last();
-            if(in_array($ext, ['mkv', 'avi', 'mov'])) {
-                $isFirst = false;
-                $newFile = explode('.', $file);
-                array_pop($newFile);
-                $newFile = implode('.', $newFile). '.mp4';
-                shell_exec("ffmpeg -i 'storage/app/public/$file'  -codec copy 'storage/app/public/$newFile' -y");
-                $this->movie->update(['status' => 'done', 'filename' => $newFile]);
-                Storage::disk('public')->delete($file);
-                return true;
-            } elseif ($ext === 'mp4') {
+            if(in_array($ext, ['mkv', 'avi', 'mov', 'mp4'])) {
                 $isFirst = false;
                 return true;
             } else {
@@ -66,5 +48,19 @@ class FollowUpload implements ShouldQueue
             }
         })->first();
 
+        Storage::disk('public')->move($file, $this->movie->storagePath.'/'.collect(explode('/', $file))->last());
+        $file = collect(Storage::disk('public')->files(directory: $this->storagePath, recursive: false))->first();
+        $this->baseFile = $this->path. '/' . collect(explode('/', $file))->last();
+
+        collect(Storage::disk('public')->directories($this->storagePath))->each(function($dir) {
+            $shortDir = collect(explode('/', $dir))->last();
+
+            if(!in_array($shortDir, ['video', 'audio', 'srt'])) {
+                Storage::disk('public')->deleteDirectory($dir);
+            }
+        });
+        $this->convertAll();
+        Storage::disk('public')->delete($file);
+        $this->movie->update(['status' => 'done']);
     }
 }

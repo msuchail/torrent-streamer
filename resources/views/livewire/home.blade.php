@@ -38,6 +38,7 @@
             Il n'y a aucun film disponible actuellement, veuillez réessayer plus tard.
         </x-ui.alert-warning>
     @endisset
+</div>
 @script
 <script>
     Alpine.data('home', () => ({
@@ -61,7 +62,7 @@
             video.setAttribute('id', 'video');
             video.setAttribute(
                 'class',
-                'w-full video-js rounded-xl',
+                'w-full video-js vjs-theme-fantasy rounded-xl',
             );
 
             document.getElementById('video-container').append(video);
@@ -72,15 +73,22 @@
                 controls: true,
                 language: 'fr',
                 playbackRates: [0.5, 1, 1.5, 2],
-                sources: [
-                    {
-                        src: $wire.videoUrl,
-                        type: 'video/mp4',
-                    },
-                ],
             })
-        },
+            player.src({
+                src: $wire.videoUrl,
+                type: 'application/x-mpegURL',
+            });
 
+            // Ajout des sous-titres
+            $wire.subtitles.forEach(subtitle => {
+                player.addRemoteTextTrack({
+                    kind: 'subtitles',
+                    default: false,
+                    src: subtitle.url,
+                    label: subtitle.name,
+                });
+            });
+        },
     }));
 </script>
 @endscript
