@@ -11,15 +11,12 @@ FROM serversideup/php:8.3-fpm-nginx as runner
 
 COPY --from=nodebuilder /app/ /var/www/html/
 
-ARG UID=33
-ARG GID=33
-
 USER root
 
 RUN install-php-extensions intl &&\
     apt update && apt install ffmpeg -y &&\
-    docker-php-serversideup-set-id www-data ${UID}:${GID} && \
-    chown -R ${UID}:${GID} .
+    docker-php-serversideup-set-id www-data 33:33 && \
+    chown -R 33:33 .
 
 
 RUN composer install
