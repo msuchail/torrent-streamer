@@ -19,7 +19,7 @@ USER root
 RUN install-php-extensions intl &&\
     apt update && apt install ffmpeg -y &&\
     docker-php-serversideup-set-id www-data ${UID}:${GID} && \
-    chown -R ${UID}:${GUID} .
+    chown -R ${UID}:${GID} .
 
 
 RUN composer install
