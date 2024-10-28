@@ -11,8 +11,8 @@ FROM serversideup/php:8.3-fpm-nginx as runner
 
 COPY --from=nodebuilder /app/ /var/www/html/
 
-ARG UID=1000
-ARG GID=1000
+ARG UID=33
+ARG GID=33
 
 USER root
 
