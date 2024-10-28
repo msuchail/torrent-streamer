@@ -1,0 +1,7 @@
+node_modules
+storage/app
+vendor
+composer.lock
+docker/.env
+package-lock.json
+public/hot

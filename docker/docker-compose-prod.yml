@@ -9,9 +9,6 @@ services:
     volumes:
       - ./storage/private/torrents:/torrents
       - ./storage/public/downloads:/downloads
-    networks:
-      - default
-#      - caddy
     restart: unless-stopped
 
   web:
@@ -21,8 +18,7 @@ services:
     image: ghcr.io/msuchail/torrentstream
     volumes:
       - ./storage:/var/www/html/storage/app
-    networks:
-      - default
+#    networks:
 #      - caddy
     restart: unless-stopped
     depends_on:
@@ -30,16 +26,18 @@ services:
         condition: service_started
       mysql:
         condition: service_healthy
+    ports:
+      - 80:8080
 
   queue:
     env_file:
       - .env
+    environment:
+      - AUTORUN_ENABLED = false
     image: ghcr.io/msuchail/torrentstream
     deploy:
       mode: replicated
-      replicas: 2
-    networks:
-      - default
+      replicas: 3
     restart: unless-stopped
     volumes:
       - ./storage:/var/www/html/storage/app
@@ -53,7 +51,7 @@ services:
       # This is our native healthcheck script for the queue
       test: [ "CMD", "healthcheck-queue" ]
       start_period: 10s
-    command: php artisan queue:work --timeout=1200
+    command: php artisan queue:work --timeout=7200
 
   mysql:
     ports:
@@ -62,8 +60,6 @@ services:
       - .env
     image: mysql
     restart: unless-stopped
-    networks:
-      - default
     volumes:
       - ./mysql-data:/var/lib/mysql
     healthcheck:
@@ -71,7 +67,6 @@ services:
       timeout: 20s
       retries: 10
 
-networks:
-  default:
+#networks:
 #  caddy:
 #    external: true

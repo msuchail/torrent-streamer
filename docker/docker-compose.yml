@@ -3,8 +3,8 @@ services:
         image: linuxserver/transmission
         container_name: transmission
         environment:
-            PUID: 1000
-            PGID: 1000
+            PUID: 33
+            PGID: 33
             TZ: 'Europe/London'
         volumes:
             - ./storage/private/torrents:/torrents
@@ -37,6 +37,8 @@ services:
 
 
     queue:
+        environment:
+            - AUTORUN_ENABLED = false
         deploy:
             mode: replicated
             replicas: 2
