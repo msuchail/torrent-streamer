@@ -19,5 +19,3 @@ COPY --chown=www-data:www-data --from=nodebuilder /app/ /var/www/html/
 USER www-data
 
 RUN composer install
-
-ENV AUTORUN_ENABLED=true

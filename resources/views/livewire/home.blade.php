@@ -69,6 +69,13 @@
 
 
             const player = videojs('video', {
+                html5: {
+                    vhs: {
+                        overrideNative: false
+                    },
+                    nativeAudioTracks: false,
+                    nativeVideoTracks: false
+                },
                 autoplay: true,
                 controls: true,
                 language: 'fr',

@@ -19,8 +19,8 @@ class FollowUpload implements ShouldQueue
     public function handle(): void
     {
         try {
-            $torrent = Transmission::get($this->movie->torrent_id);
             do {
+                $torrent = Transmission::get($this->movie->torrent_id);
                 $this->movie->update(['status' => 'downloading '. ($torrent->getPercentDone()) . '%']);
                 sleep(2);
             } while (!Storage::disk('public')->exists($this->storagePath));
