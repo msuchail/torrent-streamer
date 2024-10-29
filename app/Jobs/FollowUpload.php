@@ -29,7 +29,7 @@ class FollowUpload implements ShouldQueue
         } catch (\Exception $e) {
             return;
         }
-
+        $this->movie->update(['status' => 'downloaded']);
         $allFiles = collect(Storage::disk('public')->files(directory: $this->storagePath, recursive: true));
 
         $isFirst = true;
@@ -59,6 +59,7 @@ class FollowUpload implements ShouldQueue
                 Storage::disk('public')->deleteDirectory($dir);
             }
         });
+        $this->movie->update(['status' => 'converting']);
         $this->convertAll();
         Storage::disk('public')->delete($file);
         $this->movie->update(['status' => 'done']);

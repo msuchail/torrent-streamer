@@ -26,6 +26,7 @@ class MovieResource extends Resource
                 Forms\Components\FileUpload::make('torrent')
                     ->disk('local')
                     ->directory('torrents')
+                    ->visibleOn('create')
                     ->acceptedFileTypes(['application/x-bittorrent'])
                     ->required(),
                 Forms\Components\FileUpload::make('image')
