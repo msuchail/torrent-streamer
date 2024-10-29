@@ -42,7 +42,7 @@ class MovieResource extends Resource
                 Forms\Components\Textarea::make('description')
                     ->autosize()
                     ->rows(5)
-                    ->maxLength(500)
+                    ->maxLength(1000)
                     ->required(),
                 Forms\Components\Select::make('groupes')
                     ->relationship(titleAttribute: 'name')
