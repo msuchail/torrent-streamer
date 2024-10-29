@@ -29,6 +29,10 @@ class MovieObserver
      */
     public function updated(Movie $movie): void
     {
+        if($movie->status === "failed")
+        {
+            $this->deleted($movie);
+        }
     }
 
     /**

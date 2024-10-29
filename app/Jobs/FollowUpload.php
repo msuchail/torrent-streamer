@@ -7,11 +7,17 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Storage;
 use TransmissionPHP\Facades\Transmission;
+use Throwable;
 
 class FollowUpload implements ShouldQueue
 {
     use Queueable;
     use VideoTrait;
+
+    public $tries = 5;
+    public $timeout = 36000;
+    public  $backoff = 10;
+
 
     /**
      * Execute the job.
@@ -63,5 +69,14 @@ class FollowUpload implements ShouldQueue
         $this->convertAll();
         Storage::disk('public')->delete($file);
         $this->movie->update(['status' => 'done']);
+    }
+
+
+    /**
+     * Handle a job failure.
+     */
+    public function failed(?Throwable $exception): void
+    {
+        $this->movie->update(['status' => 'failed']);
     }
 }

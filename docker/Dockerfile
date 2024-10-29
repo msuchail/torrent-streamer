@@ -10,7 +10,7 @@ FROM serversideup/php:8.3-fpm-nginx as runner
 
 USER root
 
-RUN install-php-extensions intl
+RUN install-php-extensions intl pcntl
 RUN apt update
 RUN apt install ffmpeg -y
 
