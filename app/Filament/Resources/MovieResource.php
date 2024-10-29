@@ -38,7 +38,7 @@ class MovieResource extends Resource
                     ->required(),
                 Forms\Components\TextInput::make('title')
                     ->required()
-                    ->maxLength(50),
+                    ->maxLength(100),
                 Forms\Components\Textarea::make('description')
                     ->autosize()
                     ->rows(5)
