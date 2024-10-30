@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Traits\VideoTrait;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use TransmissionPHP\Facades\Transmission;
 use Throwable;
@@ -77,6 +78,6 @@ class FollowUpload implements ShouldQueue
      */
     public function failed(?Throwable $exception): void
     {
-        $this->movie->update(['status' => 'failed']);
+        Log::error('Job failed : {error}', ['error' => $exception->getMessage()]);
     }
 }

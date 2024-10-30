@@ -12,9 +12,6 @@ trait VideoTrait
     CONST compatibleAudioCodecs = ['aac'];
     CONST defaultAudioCodec = 'aac';
 
-
-
-
     use LocalesTrait;
     private string $path;
     private string $storagePath;
@@ -84,7 +81,7 @@ trait VideoTrait
             $lang = trim(strtolower(shell_exec("ffprobe -v error -show_entries stream_tags=language -of default=noprint_wrappers=1:nokey=1 '$this->baseFile' -select_streams s:$i")));
 
             //On vérifie que les sous titres ne sont pas forcés
-            $forced = str_contains(trim(strtolower(shell_exec("ffprobe -v error -show_entries stream_tags=title -of default=noprint_wrappers=1:nokey=1 '$this->baseFile' -select_streams s:$i"))), "force");
+            $forced = str_contains(trim(strtolower(shell_exec("ffprobe -v error -show_entries stream_tags=title -of default=noprint_wrappers=1:nokey=1 '$this->baseFile' -select_streams s:$i"))), "for");
 
             $addition = $forced ? 'forced' : 'regular';
             shell_exec("ffmpeg -i '$this->baseFile' -map 0:s:$i -c:s webvtt '{$this->path}/srt/$lang.$i.$addition.vtt' -y");
