@@ -31,6 +31,7 @@
                         nativeAudioTracks: false,
                         nativeVideoTracks: false
                     },
+                    fluid: true,
                     autoplay: true,
                     controls: true,
                     language: 'fr',
