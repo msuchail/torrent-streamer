@@ -25,7 +25,7 @@ class FollowUpload implements ShouldQueue
      */
     public function handle(): void
     {
-        try {
+/*        try {
             do {
                 $torrent = Transmission::get($this->movie->torrent_id);
                 $this->movie->update(['status' => 'downloading '. ($torrent->getPercentDone()) . '%']);
@@ -35,7 +35,7 @@ class FollowUpload implements ShouldQueue
             Storage::delete($this->movie->torrent);
         } catch (\Exception $e) {
             return;
-        }
+        }*/
         $this->movie->update(['status' => 'downloaded']);
         $allFiles = collect(Storage::disk('public')->files(directory: $this->storagePath, recursive: true));
 
@@ -68,7 +68,20 @@ class FollowUpload implements ShouldQueue
         });
         $this->movie->update(['status' => 'converting']);
         $this->convertAll();
-        Storage::disk('public')->delete($file);
+
+        $this->movie->update(['status' => 'moving to S3']);
+
+        //On supprime input.mkv
+        Storage::disk('public')->delete($this->movie->storagePath.'/input.mkv');
+
+        //On déplace tout  dans le S3
+        $allFiles = collect(Storage::disk('public')->files(directory: $this->storagePath, recursive: true))->each(function($file) {
+            Storage::disk('s3')->put($file, Storage::disk('public')->get($file));
+        });
+
+        //On supprime tout dans le public
+        Storage::disk('public')->deleteDirectory($this->storagePath);
+
         $this->movie->update(['status' => 'done']);
     }
 

@@ -1,38 +1,46 @@
 <div x-data="home" x-on:keyup.escape="closeMovie">
     <x-slot name="title">TorrentStream</x-slot>
     @isset($selectedMovie)
-        <div class="grid grid-cols-12 gap-12">
-            <div class="col-span-4 bg-slate-800/50 p-5 rounded-2xl h-[75vh] flex flex-col justify-between">
-                <div>
-                    <h2>Détails du film</h2>
-                    <img src="{{  Storage::temporaryUrl($selectedMovie->image, now()->addMinutes()) }}" alt="">
-                    <h3>{{ $selectedMovie->title }}</h3>
-                    <p>{{ $selectedMovie->description }}</p>
-                </div>
-                <div class="flex justify-center">
-                    <button
-                        x-on:click="watchMovie"
-                        class="px-3 py-1.5 text-xl text-white duration-150 bg-indigo-600 rounded-full hover:bg-indigo-500 active:bg-indigo-700 w-1/2"
-                    >
-                        Regarder
-                    </button>
-                </div>
-            </div>
-            <div class="col-span-8 bg-slate-800/50 p-5 rounded-2xl">
-                <h2>Films disponibles</h2>
-                <div class="grid grid-cols-3 gap-5">
-                    @foreach($movies as $movie)
-                        <x-ui.card class="" :h3="$movie->title" :image="Storage::temporaryUrl($movie->image, now()->addMinutes())" wire:click.prevent="setMovie({{$movie}})" wire:key="{{ $movie->id }}"></x-ui.card>
-                    @endforeach
+        <div class="gap-12">
+            <div class="col-span-8 p-5 rounded-2xl">
+                <h2>Films conseillés</h2>
+                <div class="flex items-center justify-between w-full">
+                    <x-heroicon-c-arrow-left-circle class="w-10 shrink-0 mx-5 cursor-pointer" @click="scrollLeft"/>
+                    <div id="movieList" class="flex justify-start gap-5 flex-nowrap overflow-x-scroll w-full">
+                        @foreach($movies as $movie)
+                            <x-ui.card class="shrink-0 cursor-pointer" :h3="$movie->title" :image="Storage::temporaryUrl($movie->image, now()->addMinutes())" wire:click="seeDetails({{$movie->id}})" wire:key="{{ $movie->id }}"></x-ui.card>
+                        @endforeach
+                    </div>
+                    <x-heroicon-c-arrow-right-circle class="w-10 shrink-0 mx-5 cursor-pointer" @click="scrollRight"/>
                 </div>
             </div>
         </div>
-        <template x-if="open">
-            <div class="fixed top-0 left-0 h-screen w-full bg-black/50 flex justify-center items-center" x-on:click="closeMovie">
-                <div class="fixed w-2/3" x-on:click.stop="" id="video-container">
+    @if($modal)
+        <div>
+            <div class="fixed top-0 left-0 bg-black/80 h-screen w-full flex justify-center items-center" wire:click="closeModal">
+                <div class="p-5 bg-slate-950 ring-1 ring-indigo-600 rounded-2xl">
+                    <div class="flex justify-between items-center">
+                        <h2>{{ $selectedMovie->title }}</h2>
+                        <div class="relative">
+                            <x-heroicon-c-x-mark class="w-10 cursor-pointer absolute right-0 -top-10" wire:click="closeModal"/>
+                        </div>
+                    </div>
+                    <div class="flex items-stretch gap-5">
+                        <img src="{{ Storage::temporaryUrl($selectedMovie->image, now()->addMinutes()) }}" alt="{{ $selectedMovie->title }}" class="w-1/3 rounded-2xl">
+                        <div class="w-2/3 self-stretch flex flex-col justify-between">
+                            <p>{{ $selectedMovie->description }}</p>
+                            <div class="flex gap-5 justify-end">
+                                <a href="{{ route('movie.show', $selectedMovie->id) }}" wire:navigate>
+                                    <x-filament::button class="bg-indigo-800 hover:bg-indigo-600">Regarder</x-filament::button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </template>
+        </div>
+    @endif
+
     @else
         <x-ui.alert-warning title="Aucun film disponible actuellement">
             Il n'y a aucun film disponible actuellement, veuillez réessayer plus tard.
@@ -42,60 +50,20 @@
 @script
 <script>
     Alpine.data('home', () => ({
-        open: false,
-        changeMe: 0,
-
-        closeMovie() {
-            videojs('video').dispose();
-            this.open = false;
-        },
-        watchMovie() {
-            this.open = true;
-
-            setTimeout(() => {
-                this.initPlayer();
-            }, 1);
-        },
-
-        initPlayer() {
-            const video = document.createElement('video');
-            video.setAttribute('id', 'video');
-            video.setAttribute(
-                'class',
-                'w-full video-js rounded-xl',
-            );
-
-            document.getElementById('video-container').append(video);
-
-
-            const player = videojs('video', {
-                html5: {
-                    vhs: {
-                        overrideNative: false
-                    },
-                    nativeAudioTracks: false,
-                    nativeVideoTracks: false
-                },
-                autoplay: true,
-                controls: true,
-                language: 'fr',
-                playbackRates: [0.5, 1, 1.5, 2],
-            })
-            player.src({
-                src: $wire.videoUrl,
-                type: 'application/x-mpegURL',
-            });
-
-            // Ajout des sous-titres
-            $wire.subtitles.forEach(subtitle => {
-                player.addRemoteTextTrack({
-                    kind: 'subtitles',
-                    default: false,
-                    src: subtitle.url,
-                    label: subtitle.name,
-                });
+        scrollLeft() {
+            document.getElementById('movieList').scrollBy({
+                left: -400,
+                behavior: 'smooth',
             });
         },
+        scrollRight() {
+            document.getElementById('movieList').scrollBy({
+                left: 400,
+                behavior: 'smooth',
+            });
+        },
+
+
     }));
 </script>
 @endscript

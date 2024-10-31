@@ -15,13 +15,16 @@
 
     <div class="relative min-h-screen bg-gray-100 bg-center bg-dots dark:bg-gray-900 selection:bg-indigo-500 text-white">
         <header>
-            <div class="py-4 justify-end bg-slate-800/50">
-                <nav class="container mx-auto flex justify-between items-center">
-                    <a class="flex items-center gap-5" href="{{ route('home') }}">
+            <div class="justify-end pt-3">
+                <nav class="container-giant flex justify-between items-center">
+                    <a href="{{ route('home') }}" class="flex items-center gap-5" wire:navigate>
                         <img src="{{ asset('images/logo.png') }}" alt="" class="h-12">
                         <span class="text-3xl">TorrentStream</span>
                     </a>
-
+                    <ul class="flex gap-5">
+                        <li><a href="{{ route('movie') }}" wire:navigate>Films</a></li>
+                        <li><a href="">Séries</a></li>
+                    </ul>
                     <ul class="flex gap-5">
                         <li><a href="">Accueil</a></li>
                         @auth
@@ -30,13 +33,11 @@
                             <li><a href="{{ route('login') }}">Se connecter</a></li>
                             <li><a href="{{ route('register') }}">S'inscrire</a></li>
                         @endauth
-
-
                     </ul>
                 </nav>
             </div>
         </header>
-        <main class="container mx-auto pt-5">
+        <main class="container-giant mx-auto pt-5">
             {{ $slot }}
         </main>
         <footer>

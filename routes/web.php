@@ -37,6 +37,14 @@ Route::get('password/reset/{token}', Reset::class)
 
 Route::middleware('auth')->group(function () {
     Route::get('/', \App\Livewire\Home::class)->name('home');
+
+
+    Route::group(['prefix' => 'movie'], function () {
+        Route::get('/', \App\Livewire\Movie\Index::class)->name('movie');
+        Route::get('/{movie}', \App\Livewire\Movie\Show::class)->name('movie.show');
+    });
+
+
     Route::get('email/verify', Verify::class)
         ->middleware('throttle:6,1')
         ->name('verification.notice');
@@ -55,4 +63,4 @@ Route::middleware('auth')->group(function () {
 });
 
 
-Route::get('test', \App\Http\Controllers\TestController::class);
+Route::get('test', \App\Http\Controllers\TestController::class)->middleware(['auth', 'admin']);

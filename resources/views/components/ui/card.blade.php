@@ -3,19 +3,15 @@
 
 
 <div {{ $attributes->merge(['']) }}>
-    <div class="w-full mx-auto group sm:max-w-sm">
-        <a href="{{ $href }}">
+    <div class="w-full group sm:max-w-sm hover:scale-105">
+        <div href="{{ $href }}">
             @isset($image)
-                <img src="{{$image}}" loading="lazy" class="w-full hover:scale-105" />
+                <img src="{{$image}}" loading="lazy" class="w-full" />
             @endisset
 
-            <div class="mt-3 space-y-2">
-
-            </div>
-        </a>
+        </div>
     </div>
-
-    <div class="space-y-5 ">
+    <div class="">
         @isset($h2)
             <h2>{{ $h2 }}</h2>
         @endisset
@@ -26,6 +22,4 @@
             <p class="">{{ $description }}</p>
         @endisset
     </div>
-
-
 </div>

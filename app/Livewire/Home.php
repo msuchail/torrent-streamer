@@ -12,12 +12,9 @@ use Livewire\Component;
 
 class Home extends Component
 {
-    use LocalesTrait;
-
     public Collection $movies;
-    public Movie|null $selectedMovie;
-    public string $videoUrl;
-    public array $subtitles;
+    public Movie $selectedMovie;
+    public bool $modal = false;
 
     public function render()
     {
@@ -26,39 +23,19 @@ class Home extends Component
 
     public function mount()
     {
+        $movies = Movie::active()->get();
         $this->fill([
-            'movies' => Movie::active()->get(),
+            'movies' => $movies,
+            'selectedMovie' => $movies->first(),
         ]);
-        if($this->movies->isNotEmpty()) {
-            $this->setMovie($this->movies->first());
-        }
     }
-
-    public function setMovie(Movie $movie)
+    public function seeDetails(Movie $movie)
     {
-
-        $this->fill([
-            'selectedMovie' => $movie,
-            'videoUrl' => $movie->videoUrl,
-            'subtitles' => collect(Storage::disk('public')->files($movie->storagePath.'/srt', true))
-                ->map(function($file, $key) {
-                    $fileName = collect(explode('/', $file))->last();
-                    $lang = explode('.', $fileName)[0];
-                    $forced = explode('.', $fileName)[2] === 'forced';
-                    $name = $this->matchingLanguage($lang, $key) . ($forced ? ' (Forcé)' : '');
-                    return [
-                        'url' => Storage::disk('public')->url($file),
-                        'forced' => $forced,
-                        'name' => $name,
-                        'lang' => $fileName
-                    ];
-                })->values()
-                ->toArray(),
-        ]);
-
-
+        $this->selectedMovie = $movie;
+        $this->modal = true;
     }
-
-
-
+    public function closeModal()
+    {
+        $this->modal = false;
+    }
 }

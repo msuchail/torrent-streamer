@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\TestJob;
+
 use Illuminate\Http\Request;
-use Illuminate\Queue\Jobs\Job;
 use Illuminate\Support\Facades\Storage;
 
 class TestController extends Controller
@@ -14,7 +13,6 @@ class TestController extends Controller
      */
     public function __invoke(Request $request)
     {
-
-
+        dd(Storage::disk('s3')->put('test.txt', 'Hello World'));
     }
 }

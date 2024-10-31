@@ -10,8 +10,10 @@
         "laravel-frontend-presets/tall": "^8.0",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.10",
+        "league/flysystem-aws-s3-v3": "^3.0",
         "livewire/livewire": "^3.5",
         "opcodesio/log-viewer": "^3.11",
+        "spatie/laravel-db-snapshots": "^2.6",
         "zloadmin/laravel-transmission-php": "dev-master"
     },
     "require-dev": {

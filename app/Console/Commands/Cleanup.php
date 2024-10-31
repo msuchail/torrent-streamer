@@ -31,16 +31,14 @@ class Cleanup extends Command
         Storage::disk('public')->deleteDirectory('downloads/incomplete');
         Movie::whereNot('status', 'done')->delete();
 
-        $completed = collect(Storage::disk('public')->directories('downloads/complete'));
+        Storage::delete('torrents/*');
 
-        $completed->each(function($dir) {
-            $movie = Movie::firstWhere('title', collect(explode('/', $dir))->last());
-            if (!$movie) {
-                Storage::disk('public')->deleteDirectory($dir);
+        collect(Storage::disk('s3')->directories())->each(function($directory) {
+            $id = collect(explode('/', $directory))->last();
+            if(!Movie::find($id)) {
+                Storage::disk('s3')->deleteDirectory($directory);
             }
         });
-
-        Storage::delete('torrents/*');
 
         $images = collect(Storage::files('images'));
         $images->each(function($image) {

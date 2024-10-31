@@ -3,15 +3,22 @@
 @tailwind utilities;
 
 @layer base {
+    h1 {
+        @apply text-4xl;
+        @apply my-6
+    }
     h2 {
         @apply text-3xl;
         @apply my-5
     }
     h3 {
         @apply font-semibold;
-        @apply my-3
+        @apply my-2
     }
     img {
         @apply rounded-xl
+    }
+    .container-giant {
+        @apply px-10 mx-auto
     }
 }
