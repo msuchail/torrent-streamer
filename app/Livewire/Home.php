@@ -14,6 +14,8 @@ class Home extends Component
 {
     public Collection $movies;
     public Movie $selectedMovie;
+    public Collection $filteredMovies;
+    public string $search = '';
     public bool $modal = false;
 
     public function render()
@@ -26,6 +28,7 @@ class Home extends Component
         $movies = Movie::active()->get();
         $this->fill([
             'movies' => $movies,
+            'filteredMovies' => $movies,
             'selectedMovie' => $movies->first(),
         ]);
     }
@@ -37,5 +40,11 @@ class Home extends Component
     public function closeModal()
     {
         $this->modal = false;
+    }
+    public function updatedSearch()
+    {
+        $this->filteredMovies = $this->movies->filter(function ($movie) {
+            return str_contains(strtolower($movie->title), strtolower($this->search));
+        });
     }
 }

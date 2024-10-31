@@ -19,6 +19,9 @@
         @apply rounded-xl
     }
     .container-giant {
-        @apply px-10 mx-auto
+        @apply px-3 md:px-10 mx-auto
+    }
+    .container {
+        @apply px-10
     }
 }

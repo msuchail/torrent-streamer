@@ -2,41 +2,52 @@
     <x-slot name="title">TorrentStream</x-slot>
     @isset($selectedMovie)
         <div class="gap-12">
-            <div class="col-span-8 p-5 rounded-2xl">
-                <h2>Films conseillés</h2>
+            <div class="flex flex-col gap-10">
                 <div class="flex items-center justify-between w-full">
-                    <x-heroicon-c-arrow-left-circle class="w-10 shrink-0 mx-5 cursor-pointer" @click="scrollLeft"/>
-                    <div id="movieList" class="flex justify-start gap-5 flex-nowrap overflow-x-scroll w-full">
-                        @foreach($movies as $movie)
-                            <x-ui.card class="shrink-0 cursor-pointer" :h3="$movie->title" :image="Storage::disk('s3')->temporaryUrl($movie->storagePath.'/poster.jpg', now()->addMinutes())" wire:click="seeDetails({{$movie->id}})" wire:key="{{ $movie->id }}"></x-ui.card>
-                        @endforeach
+                    <div id="movieList">
+                        <div wire:loading.delay.longer>
+                            Recherche en cours...
+                        </div>
+                        <div wire:loading.remove.delay.longer class="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 justify-start gap-5 flex-nowrap overflow-x-scroll w-full">
+                            @foreach($filteredMovies as $movie)
+                                <x-ui.card class="cursor-pointer" :h3="$movie->title" :image="Storage::disk('s3')->temporaryUrl($movie->storagePath.'/poster.jpg', now()->addMinutes())" wire:click="seeDetails({{$movie->id}})" wire:key="{{ $movie->id }}"></x-ui.card>
+                            @endforeach
+                        </div>
                     </div>
-                    <x-heroicon-c-arrow-right-circle class="w-10 shrink-0 mx-5 cursor-pointer" @click="scrollRight"/>
                 </div>
             </div>
         </div>
+    <div class="fixed w-full bottom-0 flex justify-center left-0 py-5 bg-slate-950">
+        <div class="container mx-auto ">
+            <x-filament::input wire:model.live="search" type="search" placeholder="Rechercher un film..." class="h-10 rounded-full bg-slate-800" />
+        </div>
+
+    </div>
     @if($modal)
         <div>
             <div class="fixed top-0 left-0 bg-black/80 h-screen w-full flex justify-center items-center" wire:click="closeModal">
-                <div class="p-5 bg-slate-950 ring-1 ring-indigo-600 rounded-2xl">
+                <div class="p-5 bg-slate-950 ring-1 ring-indigo-600 md:rounded-2xl max-w-6xl h-screen md:h-fit">
                     <div class="flex justify-between items-center">
                         <h2>{{ $selectedMovie->title }}</h2>
                         <div class="relative">
                             <x-heroicon-c-x-mark class="w-10 cursor-pointer absolute right-0 -top-10" wire:click="closeModal"/>
                         </div>
                     </div>
-                    <div class="flex items-stretch gap-5">
-                        <img src="{{ Storage::disk('s3')->temporaryUrl($movie->storagePath.'/poster.jpg', now()->addMinutes()) }}" alt="{{ $selectedMovie->title }}" class="w-1/3 rounded-2xl">
-                        <div class="w-2/3 self-stretch flex flex-col justify-between">
+                    <div class="flex md:flex-row flex-col items-stretch gap-5">
+                        <img src="{{ Storage::disk('s3')->temporaryUrl($selectedMovie->storagePath.'/poster.jpg', now()->addMinutes()) }}" alt="{{ $selectedMovie->title }}" class="w-full md:w-1/3 rounded-2xl aspect-video">
+                        <div class="md:w-2/3 self-stretch flex flex-col justify-between">
                             <p>{{ $selectedMovie->description }}</p>
                             <div class="flex gap-5 justify-end">
-                                <a href="{{ route('movie.show', $selectedMovie->id) }}" wire:navigate>
-                                    <x-filament::button class="bg-indigo-800 hover:bg-indigo-600">Regarder</x-filament::button>
+                                <a href="{{ route('movie.show', $selectedMovie->id) }}" wire:navigate class="">
+                                    <x-filament::button class="bg-indigo-800 hover:bg-indigo-600 rounded-xl">Regarder</x-filament::button>
                                 </a>
                             </div>
                         </div>
                     </div>
                 </div>
+                <a href="{{ route('movie.show', $selectedMovie->id) }}" wire:navigate class="md:hidden fixed bottom-10 w-full flex justify-center">
+                    <x-filament::button class="bg-indigo-800 hover:bg-indigo-600 w-2/3 rounded-xl">Regarder</x-filament::button>
+                </a>
             </div>
         </div>
     @endif
@@ -50,20 +61,6 @@
 @script
 <script>
     Alpine.data('home', () => ({
-        scrollLeft() {
-            document.getElementById('movieList').scrollBy({
-                left: -400,
-                behavior: 'smooth',
-            });
-        },
-        scrollRight() {
-            document.getElementById('movieList').scrollBy({
-                left: 400,
-                behavior: 'smooth',
-            });
-        },
-
-
     }));
 </script>
 @endscript

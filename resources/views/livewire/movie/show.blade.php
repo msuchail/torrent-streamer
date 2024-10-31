@@ -2,7 +2,7 @@
     <h1>
         {{ $movie->title }}
     </h1>
-    <div class="rounded-2xl overflow-hidden">
+    <div class="rounded-xl overflow-hidden">
         <video id="video" class="video-js"></video>
     </div>
     <h2>Synopsis :</h2>

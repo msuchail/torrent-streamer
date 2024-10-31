@@ -3,10 +3,10 @@
 
 
 <div {{ $attributes->merge(['']) }}>
-    <div class="w-full group sm:max-w-sm hover:scale-105">
+    <div class="w-full group hover:scale-105">
         <div href="{{ $href }}">
             @isset($image)
-                <img src="{{$image}}" loading="lazy" class="w-full" />
+                <img src="{{$image}}" loading="lazy" class="w-full aspect-video" />
             @endisset
 
         </div>
