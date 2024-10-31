@@ -13,6 +13,7 @@ class Show extends Component
 
     public Movie $movie;
     public array $subtitles = [];
+    public string $videoUrl = '';
 
 
     public function render()
@@ -21,6 +22,7 @@ class Show extends Component
     }
     public function mount()
     {
+        $this->videoUrl = $this->movie->videoUrl;
         $this->subtitles = collect(Storage::disk('s3')->files($this->movie->storagePath.'/srt', true))
             ->map(function($file, $key) {
                 $fileName = collect(explode('/', $file))->last();

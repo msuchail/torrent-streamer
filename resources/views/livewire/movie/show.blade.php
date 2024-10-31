@@ -2,9 +2,7 @@
     <h1>
         {{ $movie->title }}
     </h1>
-    <div class="rounded-xl overflow-hidden w-full">
-        <video id="video" class="video-js"></video>
-    </div>
+    <div id="video-container" class="rounded-xl overflow-hidden"></div>
     <div class="hidden md:block">
         <h2>Synopsis :</h2>
         <p class="">
@@ -17,6 +15,14 @@
     <script>
         Alpine.data('page', () => ({
             init() {
+                const video = document.createElement('video');
+                video.setAttribute('id', 'video');
+                video.setAttribute(
+                    'class',
+                    'w-full video-js',
+                );
+                document.getElementById('video-container').append(video);
+
                 const player = videojs('video', {
                     html5: {
                         vhs: {
@@ -32,7 +38,7 @@
                 })
 
                 player.src({
-                    src: "{{ $movie->videoUrl }}",
+                    src: $wire.videoUrl,
                     type: "application/x-mpegURL",
                 });
 
