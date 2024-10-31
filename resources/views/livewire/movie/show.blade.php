@@ -20,17 +20,16 @@
                 const player = videojs('video', {
                     html5: {
                         vhs: {
-                            overrideNative: true
+                            overrideNative: !videojs.browser.IS_SAFARI
                         },
                         nativeAudioTracks: false,
                         nativeVideoTracks: false
                     },
-                    fluid: true,
                     autoplay: true,
                     controls: true,
                     language: 'fr',
                     playbackRates: [0.5, 1, 1.5, 2],
-                });
+                })
 
                 player.src({
                     src: "{{ $movie->videoUrl }}",
