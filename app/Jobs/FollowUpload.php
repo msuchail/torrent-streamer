@@ -74,6 +74,9 @@ class FollowUpload implements ShouldQueue
         //On supprime input.mkv
         Storage::disk('public')->delete($this->movie->storagePath.'/input.mkv');
 
+        //On ajoute l'image du film dans le répertoire
+        Storage::disk('public')->move($this->movie->image, $this->movie->storagePath.'/poster.jpg');
+
         //On déplace tout  dans le S3
         $allFiles = collect(Storage::disk('public')->files(directory: $this->storagePath, recursive: true))->each(function($file) {
             Storage::disk('s3')->put($file, Storage::disk('public')->get($file));

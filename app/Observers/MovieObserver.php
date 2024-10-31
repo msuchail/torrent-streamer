@@ -49,7 +49,6 @@ class MovieObserver
         Storage::delete($movie->torrent);
         Storage::disk('public')->deleteDirectory('downloads/complete/'.$movie->id);
         Storage::disk('s3')->delete('downloads/complete/'.$movie->id);
-        Storage::disk('local')->delete($movie->image);
     }
 
     /**

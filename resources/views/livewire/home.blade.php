@@ -8,7 +8,7 @@
                     <x-heroicon-c-arrow-left-circle class="w-10 shrink-0 mx-5 cursor-pointer" @click="scrollLeft"/>
                     <div id="movieList" class="flex justify-start gap-5 flex-nowrap overflow-x-scroll w-full">
                         @foreach($movies as $movie)
-                            <x-ui.card class="shrink-0 cursor-pointer" :h3="$movie->title" :image="Storage::temporaryUrl($movie->image, now()->addMinutes())" wire:click="seeDetails({{$movie->id}})" wire:key="{{ $movie->id }}"></x-ui.card>
+                            <x-ui.card class="shrink-0 cursor-pointer" :h3="$movie->title" :image="Storage::disk('s3')->temporaryUrl($movie->storagePath.'/poster.jpg', now()->addMinutes())" wire:click="seeDetails({{$movie->id}})" wire:key="{{ $movie->id }}"></x-ui.card>
                         @endforeach
                     </div>
                     <x-heroicon-c-arrow-right-circle class="w-10 shrink-0 mx-5 cursor-pointer" @click="scrollRight"/>
@@ -26,7 +26,7 @@
                         </div>
                     </div>
                     <div class="flex items-stretch gap-5">
-                        <img src="{{ Storage::temporaryUrl($selectedMovie->image, now()->addMinutes()) }}" alt="{{ $selectedMovie->title }}" class="w-1/3 rounded-2xl">
+                        <img src="{{ Storage::disk('s3')->temporaryUrl($movie->storagePath.'/poster.jpg', now()->addMinutes()) }}" alt="{{ $selectedMovie->title }}" class="w-1/3 rounded-2xl">
                         <div class="w-2/3 self-stretch flex flex-col justify-between">
                             <p>{{ $selectedMovie->description }}</p>
                             <div class="flex gap-5 justify-end">
