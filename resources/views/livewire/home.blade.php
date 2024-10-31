@@ -26,7 +26,7 @@
     @if($modal)
         <div>
             <div class="fixed top-0 left-0 bg-black/80 h-screen w-full flex justify-center items-center" wire:click="closeModal">
-                <div class="p-5 bg-slate-950 ring-1 ring-indigo-600 md:rounded-2xl max-w-6xl h-screen md:h-fit">
+                <div class="p-5 bg-slate-950 ring-1 ring-indigo-600 2xl:rounded-2xl h-screen 2xl:h-fit 2xl:w-2/3">
                     <div class="flex justify-between items-center">
                         <h2>{{ $selectedMovie->title }}</h2>
                         <div class="relative">
@@ -39,14 +39,14 @@
                             <p>{{ $selectedMovie->description }}</p>
                             <div class="flex gap-5 justify-end">
                                 <a href="{{ route('movie.show', $selectedMovie->id) }}" wire:navigate class="">
-                                    <x-filament::button class="hidden md:block bg-indigo-800 hover:bg-indigo-600 rounded-xl">Regarder</x-filament::button>
+                                    <x-filament::button class="hidden 2xl:block bg-indigo-800 hover:bg-indigo-600 rounded-xl">Regarder</x-filament::button>
                                 </a>
                             </div>
                         </div>
                     </div>
                 </div>
-                <a href="{{ route('movie.show', $selectedMovie->id) }}" wire:navigate class="md:hidden fixed bottom-10 w-full flex justify-center">
-                    <x-filament::button class="bg-indigo-800 hover:bg-indigo-600 w-2/3 rounded-xl">Regarder</x-filament::button>
+                <a href="{{ route('movie.show', $selectedMovie->id) }}" wire:navigate class="2xl:hidden fixed bottom-10 w-full flex justify-center">
+                    <x-filament::button class="bg-indigo-800 hover:bg-indigo-600 md:w-fit px-12 w-2/3 rounded-xl">Regarder</x-filament::button>
                 </a>
             </div>
         </div>
