@@ -25,6 +25,7 @@
                         nativeAudioTracks: false,
                         nativeVideoTracks: false
                     },
+                    fluid: true,
                     autoplay: true,
                     controls: true,
                     language: 'fr',
@@ -32,8 +33,8 @@
                 });
 
                 player.src({
-                    src: '{{ $movie->videoUrl }}',
-                    type: 'application/x-mpegURL',
+                    src: "{{ $movie->videoUrl }}",
+                    type: "application/x-mpegURL",
                 });
 
                 $wire.subtitles.forEach(subtitle => {
