@@ -20,7 +20,7 @@
                 const player = videojs('video', {
                     html5: {
                         vhs: {
-                            overrideNative: false
+                            overrideNative: true
                         },
                         nativeAudioTracks: false,
                         nativeVideoTracks: false
