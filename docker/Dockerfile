@@ -13,6 +13,8 @@ USER root
 RUN install-php-extensions intl pcntl
 RUN apt update
 RUN apt install ffmpeg -y
+RUN apt-get install -y default-mysql-client
+
 
 COPY --chown=www-data:www-data --from=nodebuilder /app/ /var/www/html/
 
