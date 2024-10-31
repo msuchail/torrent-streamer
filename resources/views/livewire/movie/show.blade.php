@@ -1,14 +1,17 @@
-<div x-data="page" class="container mx-auto">
+<div x-data="page">
     <h1>
         {{ $movie->title }}
     </h1>
-    <div class="rounded-xl overflow-hidden">
+    <div class="rounded-xl overflow-hidden w-full">
         <video id="video" class="video-js"></video>
     </div>
-    <h2>Synopsis :</h2>
-    <p class="">
-        {{ $movie->description }}
-    </p>
+    <div class="hidden md:block">
+        <h2>Synopsis :</h2>
+        <p class="">
+            {{ $movie->description }}
+        </p>
+    </div>
+
 </div>
 @script
     <script>

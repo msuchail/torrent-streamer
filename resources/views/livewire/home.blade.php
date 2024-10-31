@@ -39,7 +39,7 @@
                             <p>{{ $selectedMovie->description }}</p>
                             <div class="flex gap-5 justify-end">
                                 <a href="{{ route('movie.show', $selectedMovie->id) }}" wire:navigate class="">
-                                    <x-filament::button class="bg-indigo-800 hover:bg-indigo-600 rounded-xl">Regarder</x-filament::button>
+                                    <x-filament::button class="hidden md:block bg-indigo-800 hover:bg-indigo-600 rounded-xl">Regarder</x-filament::button>
                                 </a>
                             </div>
                         </div>
