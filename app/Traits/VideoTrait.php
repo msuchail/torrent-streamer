@@ -57,9 +57,7 @@ trait VideoTrait
         Storage::disk('public')->makeDirectory("$this->storagePath/audio");
         for ($i = 0; $i < 5; $i++) {
             Storage::disk('public')->makeDirectory("$this->storagePath/audio/$i");
-            $codec = trim(shell_exec("ffprobe -v error -select_streams a:$i -show_entries stream=codec_name -of default=noprint_wrappers=1:nokey=1 '$this->baseFile'"));
-            $codec = in_array($codec, self::compatibleAudioCodecs) ? "copy" : self::defaultAudioCodec;
-            shell_exec("ffmpeg -i '$this->baseFile' -map 0:a:$i -c:a $codec $this->hlsFormat '{$this->path}/audio/$i/prog_index.m3u8' -y");
+            shell_exec("ffmpeg -i '$this->baseFile' -map 0:a:$i -c:a aac -ac 2 $this->hlsFormat '{$this->path}/audio/$i/prog_index.m3u8' -y");
 
             if(Storage::disk('public')->exists("$this->storagePath/audio/$i/prog_index.m3u8")) {
                 // On récupère le nom de la langue
