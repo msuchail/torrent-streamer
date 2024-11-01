@@ -9,14 +9,13 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use TransmissionPHP\Facades\Transmission;
 use Throwable;
-use function Laravel\Prompts\error;
 
 class FollowUpload implements ShouldQueue
 {
     use Queueable;
     use VideoTrait;
 
-    public $tries = 5;
+    public $tries = 1;
     public $timeout = 36000;
     public  $backoff = 10;
 
@@ -26,11 +25,11 @@ class FollowUpload implements ShouldQueue
      */
     public function handle(): void
     {
-        //On dplace l'image dans le S3
+        //On déplace l'image dans le S3
         $fileName = collect(explode('/', $this->movie->image))->last();
-        Storage::disk('s3')->put($this->movie->storagePath.'/'.$fileName, Storage::get(Storage::get($this->movie->image)));
+        Storage::disk('s3')->put($this->movie->storagePath.'/'.$fileName, Storage::get($this->movie->image));
         Storage::delete($this->movie->image);
-        $this->movie->update->image($this->movie->storagePath.'/'.$fileName);
+        $this->movie->update(['image' => $this->movie->storagePath.'/'.$fileName]);
 
         try {
             do {

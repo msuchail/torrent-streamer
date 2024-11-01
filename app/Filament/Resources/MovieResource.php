@@ -55,7 +55,7 @@ class MovieResource extends Resource
                 Forms\Components\Select::make('groups')
                     ->relationship(titleAttribute: 'name')
                     ->preload()
-                    ->multiple()
+                    ->multiple(),
             ])->columns(1);
     }
 
@@ -82,11 +82,6 @@ class MovieResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
             ]);
     }
 

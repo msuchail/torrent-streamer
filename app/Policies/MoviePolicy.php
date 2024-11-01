@@ -37,7 +37,7 @@ class MoviePolicy
      */
     public function update(User $user, Movie $movie): bool
     {
-        return $user->isAdmin();
+        return $user->isAdmin()  && config('app.env') === $movie->environment;
     }
 
     /**
@@ -45,6 +45,14 @@ class MoviePolicy
      */
     public function delete(User $user, Movie $movie): bool
     {
-        return $user->isAdmin();
+        return $user->isAdmin() && config('app.env') === $movie->environment;
+    }
+
+    /**
+     * Determine whether the user can restore the model.
+     */
+    public function restore(User $user, Movie $movie): bool
+    {
+        return $user->isAdmin() && config('app.env') === $movie->environment;
     }
 }

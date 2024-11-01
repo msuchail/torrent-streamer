@@ -15,6 +15,7 @@ class MovieObserver
      */
     public function created(Movie $movie): void
     {
+        $movie->update(['environment' => config('app.env')]);
         $torrent = Transmission::add(torrent: '/'.$movie->torrent, savepath: '/downloads/complete/'.$movie->id);
 
         $movie->update([
@@ -30,9 +31,11 @@ class MovieObserver
     public function updated(Movie $movie): void
     {
         if($movie->isDirty('image')) {
-            $lastImage = $movie->getOriginal('image') ?? '';
-            Storage::disk('s3')->delete($lastImage);
-            Storage::delete($lastImage);
+            $lastImage = $movie->getOriginal('image');
+            if(isset($lastImage)) {
+                Storage::disk('s3')->delete($lastImage);
+                Storage::delete($lastImage);
+            }
         }
     }
 
