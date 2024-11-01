@@ -33,10 +33,6 @@ class UserResource extends Resource
                     ->unique(ignoreRecord: true)
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('password')
-                    ->password()
-                    ->required()
-                    ->maxLength(255),
                 Forms\Components\Select::make('group')
                     ->relationship('group', "name")
                     ->required(),
