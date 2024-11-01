@@ -31,7 +31,6 @@
                         nativeVideoTracks: false
                     },
                     fluid: true,
-                    autoplay: true,
                     controls: true,
                     language: 'fr',
                     playbackRates: [0.5, 1, 1.5, 2],
@@ -78,6 +77,9 @@
                         label: subtitle.name,
                     });
                 });
+                document.querySelector('.vjs-big-play-button').click();
+                document.querySelector('.vjs-fullscreen-control').click();
+
 
             },
             destroy() {
