@@ -1,10 +1,9 @@
 <div x-data="page">
-    <h1>
-        {{ $movie->title }}
-    </h1>
     <div id="video-container" class="rounded-xl overflow-hidden"></div>
     <div class="hidden md:block">
-        <h2>Synopsis :</h2>
+        <h1>
+            {{ $movie->title }}
+        </h1>
         <p class="">
             {{ $movie->description }}
         </p>
