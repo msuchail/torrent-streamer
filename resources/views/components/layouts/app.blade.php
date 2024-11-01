@@ -34,7 +34,7 @@
             </div>
 
         </header>
-        <main class="container mx-auto pt-5">
+        <main class="container mx-auto pb-20">
             {{ $slot }}
         </main>
         <footer>
