@@ -14,7 +14,7 @@ use Livewire\Component;
 class Home extends Component
 {
     public Collection $movies;
-    public Movie $selectedMovie;
+    public ?Movie $selectedMovie;
     public Collection $filteredMovies;
     public string $search = '';
     public bool $modal = false;
