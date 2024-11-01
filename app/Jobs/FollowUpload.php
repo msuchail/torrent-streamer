@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use TransmissionPHP\Facades\Transmission;
 use Throwable;
+use function Laravel\Prompts\error;
 
 class FollowUpload implements ShouldQueue
 {
@@ -25,6 +26,12 @@ class FollowUpload implements ShouldQueue
      */
     public function handle(): void
     {
+        //On dplace l'image dans le S3
+        $fileName = collect(explode('/', $this->movie->image))->last();
+        Storage::disk('s3')->put($this->movie->storagePath.'/'.$fileName, Storage::get(Storage::get($this->movie->image)));
+        Storage::delete($this->movie->image);
+        $this->movie->update->image($this->movie->storagePath.'/'.$fileName);
+
         try {
             do {
                 $torrent = Transmission::get($this->movie->torrent_id);
@@ -73,9 +80,6 @@ class FollowUpload implements ShouldQueue
 
         //On supprime input.mkv
         Storage::disk('public')->delete($this->movie->storagePath.'/input.mkv');
-
-        //On ajoute l'image du film dans le répertoire
-        Storage::disk('public')->move($this->movie->image, $this->movie->storagePath.'/poster.jpg');
 
         //On déplace tout  dans le S3
         $allFiles = collect(Storage::disk('public')->files(directory: $this->storagePath, recursive: true))->each(function($file) {

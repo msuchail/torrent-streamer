@@ -3,15 +3,13 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\MovieResource\Pages;
-use App\Filament\Resources\MovieResource\RelationManagers;
 use App\Models\Movie;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Storage;
 
 class MovieResource extends Resource
 {
@@ -21,6 +19,16 @@ class MovieResource extends Resource
 
     public static function form(Form $form): Form
     {
+        $movie = $form->getRecord();
+        if (isset($movie)) {
+            $imageStorage = Storage::disk('s3')->exists($movie?->storagePath ?? '') ? 's3' : 'local';
+            $imageDirectory = $imageStorage === 's3' ? $movie->storagePath : 'images';
+        } else {
+            $imageDirectory = 'images';
+            $imageStorage = 'local';
+        }
+
+
         return $form
             ->schema([
                 Forms\Components\FileUpload::make('torrent')
@@ -30,9 +38,9 @@ class MovieResource extends Resource
                     ->acceptedFileTypes(['application/x-bittorrent'])
                     ->required(),
                 Forms\Components\FileUpload::make('image')
-                    ->disk('local')
+                    ->disk($imageStorage)
                     ->image()
-                    ->directory('images')
+                    ->directory($imageDirectory)
                     ->previewable()
                     ->imageCropAspectRatio('16:9')
                     ->required(),
@@ -44,7 +52,7 @@ class MovieResource extends Resource
                     ->rows(5)
                     ->maxLength(1000)
                     ->required(),
-                Forms\Components\Select::make('groupes')
+                Forms\Components\Select::make('groups')
                     ->relationship(titleAttribute: 'name')
                     ->preload()
                     ->multiple()
@@ -74,13 +82,10 @@ class MovieResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
-                Tables\Actions\ForceDeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make(),
-
                 ]),
             ]);
     }

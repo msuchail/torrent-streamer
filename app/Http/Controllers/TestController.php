@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class TestController extends Controller
@@ -13,6 +14,7 @@ class TestController extends Controller
      */
     public function __invoke(Request $request)
     {
-        dd(Storage::disk('s3')->put('test.txt', 'Hello World'));
+        dd(Storage::disk('s3')->files('downloads/complete/4'));
+        dd(Auth::user()->groupes()->getRelation('movies')->get());
     }
 }

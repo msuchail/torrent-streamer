@@ -10,7 +10,7 @@
                         </div>
                         <div wire:loading.remove.delay.longer class="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 justify-start gap-5 flex-nowrap overflow-x-scroll w-full">
                             @foreach($filteredMovies as $movie)
-                                <x-ui.card class="cursor-pointer" :h3="$movie->title" :image="Storage::disk('s3')->temporaryUrl($movie->storagePath.'/poster.jpg', now()->addMinutes())" wire:click="seeDetails({{$movie->id}})" wire:key="{{ $movie->id }}"></x-ui.card>
+                                <x-ui.card class="cursor-pointer" :h3="$movie->title" :image="Storage::disk('s3')->temporaryUrl($movie->image, now()->addMinutes())" wire:click="seeDetails({{$movie->id}})" wire:key="{{ $movie->id }}"></x-ui.card>
                             @endforeach
                         </div>
                     </div>
@@ -34,7 +34,7 @@
                         </div>
                     </div>
                     <div class="flex md:flex-row flex-col items-stretch gap-5">
-                        <img src="{{ Storage::disk('s3')->temporaryUrl($selectedMovie->storagePath.'/poster.jpg', now()->addMinutes()) }}" alt="{{ $selectedMovie->title }}" class="w-full md:w-1/3 rounded-2xl aspect-video">
+                        <img src="{{ Storage::disk('s3')->temporaryUrl($selectedMovie->image, now()->addMinutes()) }}" alt="{{ $selectedMovie->title }}" class="w-full md:w-1/3 rounded-2xl aspect-video">
                         <div class="md:w-2/3 self-stretch flex flex-col justify-between">
                             <p>{{ $selectedMovie->description }}</p>
                             <div class="flex gap-5 justify-end">

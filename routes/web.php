@@ -35,7 +35,7 @@ Route::get('password/reset', Email::class)
 Route::get('password/reset/{token}', Reset::class)
     ->name('password.reset');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'active'])->group(function () {
     Route::get('/', \App\Livewire\Home::class)->name('home');
 
 
@@ -62,5 +62,6 @@ Route::middleware('auth')->group(function () {
         ->name('logout');
 });
 
+Route::get('inactive', \App\Livewire\Inactive::class)->name('inactive')->middleware(['auth', 'active']);
 
 Route::get('test', \App\Http\Controllers\TestController::class)->middleware(['auth', 'admin']);

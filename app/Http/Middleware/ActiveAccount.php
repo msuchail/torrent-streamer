@@ -4,10 +4,9 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class AdminMiddleware
+class ActiveAccount
 {
     /**
      * Handle an incoming request.
@@ -16,6 +15,13 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        return $request->user()->isAdmin() ? $next($request) : redirect()->route('home');
+        if($request->user()->active) {
+            if($request->route()->getName() === "inactive") {
+                return redirect()->route('home');
+            }
+            return $next($request);
+        } else {
+            return redirect()->route('inactive');
+        }
     }
 }

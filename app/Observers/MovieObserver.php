@@ -29,6 +29,11 @@ class MovieObserver
      */
     public function updated(Movie $movie): void
     {
+        if($movie->isDirty('image')) {
+            $lastImage = $movie->getOriginal('image');
+            Storage::disk('s3')->delete($lastImage);
+            Storage::delete($lastImage);
+        }
     }
 
     /**

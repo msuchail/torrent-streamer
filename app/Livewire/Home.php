@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Movie;
 use App\Traits\LocalesTrait;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
@@ -25,7 +26,9 @@ class Home extends Component
 
     public function mount()
     {
-        $movies = Movie::active()->get();
+        $movies = Movie::active()->get()->filter(function ($movie) {
+            return Auth::user()->can('view', $movie);
+        });
         $this->fill([
             'movies' => $movies,
             'filteredMovies' => $movies,
