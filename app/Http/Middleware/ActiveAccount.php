@@ -16,11 +16,14 @@ class ActiveAccount
     public function handle(Request $request, Closure $next): Response
     {
         if($request->user()->active) {
-            if($request->route()->getName() === "inactive") {
+            if($request->route()->getName() === 'inactive') {
                 return redirect()->route('home');
             }
             return $next($request);
         } else {
+            if ($request->route()->getName() === 'inactive') {
+                return $next($request);
+            }
             return redirect()->route('inactive');
         }
     }
