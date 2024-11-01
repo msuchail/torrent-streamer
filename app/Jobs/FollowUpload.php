@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\Movie;
 use App\Traits\VideoTrait;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -13,12 +14,17 @@ use Throwable;
 class FollowUpload implements ShouldQueue
 {
     use Queueable;
-    use VideoTrait;
 
-    public $tries = 1;
-    public $timeout = 36000;
+
+    public $tries = 5;
+    public $timeout = 3600;
     public  $backoff = 10;
 
+
+    public function __construct(public Movie $movie)
+    {
+        //
+    }
 
     /**
      * Execute the job.
@@ -36,17 +42,19 @@ class FollowUpload implements ShouldQueue
                 $torrent = Transmission::get($this->movie->torrent_id);
                 $this->movie->update(['status' => 'downloading '. ($torrent->getPercentDone()) . '%']);
                 sleep(2);
-            } while (!Storage::disk('public')->exists($this->storagePath));
+            } while (!Storage::disk('public')->exists($this->movie->storagePath));
             Transmission::remove($torrent);
             Storage::delete($this->movie->torrent);
         } catch (\Exception $e) {
             return;
         }
         $this->movie->update(['status' => 'downloaded']);
-        $allFiles = collect(Storage::disk('public')->files(directory: $this->storagePath, recursive: true));
 
+
+        // On tri les fichiers pour garder le premier fichier vidéo
+        $allFiles = collect(Storage::disk('public')->files(directory: $this->movie->storagePath, recursive: true));
         $isFirst = true;
-        $file = $allFiles->filter(function($file) use (&$isFirst, &$keep) {
+        $file = $allFiles->filter(function($file) use (&$isFirst) {
             if (!$isFirst) {
                 Storage::disk('public')->delete($file);
                 return false;
@@ -60,35 +68,22 @@ class FollowUpload implements ShouldQueue
                 return false;
             }
         })->first();
-
         Storage::disk('public')->move($file, $this->movie->storagePath.'/input.'.collect(explode('.', $file))->last());
-        $file = collect(Storage::disk('public')->files(directory: $this->storagePath, recursive: false))->first();
-        $this->baseFile = $this->path. '/' . collect(explode('/', $file))->last();
-
-        collect(Storage::disk('public')->directories($this->storagePath))->each(function($dir) {
+        error_log('1');
+        $file = collect(Storage::disk('public')->files(directory: $this->movie->storagePath, recursive: false))->first();
+        error_log('1.1');
+        error_log('2');
+        collect(Storage::disk('public')->directories($this->movie->storagePath))->each(function($dir) {
             $shortDir = collect(explode('/', $dir))->last();
 
             if(!in_array($shortDir, ['video', 'audio', 'srt'])) {
                 Storage::disk('public')->deleteDirectory($dir);
             }
         });
-        $this->movie->update(['status' => 'converting']);
-        $this->convertAll();
+        error_log('3');
 
-        $this->movie->update(['status' => 'moving to S3']);
-
-        //On supprime input.mkv
-        Storage::disk('public')->delete($this->movie->storagePath.'/input.mkv');
-
-        //On déplace tout  dans le S3
-        $allFiles = collect(Storage::disk('public')->files(directory: $this->storagePath, recursive: true))->each(function($file) {
-            Storage::disk('s3')->put($file, Storage::disk('public')->get($file));
-        });
-
-        //On supprime tout dans le public
-        Storage::disk('public')->deleteDirectory($this->storagePath);
-
-        $this->movie->update(['status' => 'done']);
+        // On convertit le fichier
+        ConvertVideo::dispatch($this->movie);
     }
 
 
@@ -97,6 +92,6 @@ class FollowUpload implements ShouldQueue
      */
     public function failed(?Throwable $exception): void
     {
-        Log::error('Job failed : {error}', ['error' => $exception->getMessage()]);
+        $this->movie->update(['status' => 'failed (follow upload)']);
     }
 }

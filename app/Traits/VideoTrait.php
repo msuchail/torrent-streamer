@@ -25,9 +25,10 @@ trait VideoTrait
         private readonly Movie $movie,
         private readonly int   $segmentDuration = 60
     ){
-        $this->storagePath = "downloads/complete/{$this->movie->id}";
+        $this->storagePath = $this->movie->storagePath;
         $this->hlsFormat = "-f hls -hls_time $this->segmentDuration -hls_list_size 0";
         $this->path = "storage/app/public/downloads/complete/{$this->movie->id}";
+        $this->baseFile = $this->path . '/' . collect(explode('/', collect(Storage::files($this->storagePath))->first()))->last();
     }
 
 

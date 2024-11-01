@@ -76,6 +76,7 @@ class MovieResource extends Resource
                 Tables\Columns\TextColumn::make('status')
                     ->searchable(),
             ])
+            ->poll('2s')
             ->filters([
                 //
             ])

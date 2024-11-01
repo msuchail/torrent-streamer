@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Storage;
 #[ObservedBy(MovieObserver::class)]
 class Movie extends Model
 {
-    protected $fillable = ['torrent', 'title', 'status', 'torrent_id', 'description', 'image'];
+    protected $fillable = ['torrent', 'title', 'status', 'torrent_id', 'description', 'image', 'environment'];
 
 
     public function scopeActive($query)
