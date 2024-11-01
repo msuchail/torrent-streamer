@@ -10,7 +10,7 @@
                         </div>
                         <div wire:loading.remove.delay.longer class="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 justify-start gap-5 flex-nowrap overflow-x-scroll w-full">
                             @foreach($filteredMovies as $movie)
-                                <x-ui.card class="cursor-pointer" :h3="$movie->title" :image="Storage::disk('s3')->temporaryUrl($movie->image, now()->addMinutes())" wire:click="seeDetails({{$movie->id}})" wire:key="{{ $movie->id }}"></x-ui.card>
+                                <x-ui.card class="cursor-pointer" :h3="$movie->title" :image="Storage::disk('s3')->temporaryUrl($movie->image, now()->addMinutes())" wire:click="seeDetails({{$movie->id}})"></x-ui.card>
                             @endforeach
                         </div>
                     </div>

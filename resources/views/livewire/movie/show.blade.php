@@ -43,6 +43,34 @@
                     type: "application/x-mpegURL",
                 });
 
+                // Keyboard shortcuts
+                player.on('keydown', (event) => {
+                    if (event.which === 32) {
+                        event.preventDefault();
+                        player.paused() ? player.play() : player.pause();
+                    }
+                    if (event.which === 37) {
+                        event.preventDefault();
+                        player.currentTime(player.currentTime() - 10);
+                    }
+                    if (event.which === 39) {
+                        event.preventDefault();
+                        player.currentTime(player.currentTime() + 10);
+                    }
+                    if (event.which === 38) {
+                        event.preventDefault();
+                        player.volume(player.volume() + 0.1);
+                    }
+                    if (event.which === 40) {
+                        event.preventDefault();
+                        player.volume(player.volume() - 0.1);
+                    }
+                    if (event.which === 70) {
+                        event.preventDefault();
+                        document.querySelector('.vjs-fullscreen-control').click();
+                    }
+                });
+
                 $wire.subtitles.forEach(subtitle => {
                     player.addRemoteTextTrack({
                         kind: 'subtitles',
