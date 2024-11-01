@@ -28,7 +28,7 @@ trait VideoTrait
         $this->storagePath = $this->movie->storagePath;
         $this->hlsFormat = "-f hls -hls_time $this->segmentDuration -hls_list_size 0";
         $this->path = "storage/app/public/downloads/complete/{$this->movie->id}";
-        $this->baseFile = $this->path . '/' . collect(explode('/', collect(Storage::files($this->storagePath))->first()))->last();
+        $this->baseFile = $this->path . '/' . collect(explode('/', collect(Storage::disk('public')->files($this->storagePath))->first()))->last();
     }
 
 

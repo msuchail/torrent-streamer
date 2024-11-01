@@ -13,7 +13,7 @@ class ConvertVideo implements ShouldQueue
     use Queueable;
     use VideoTrait;
     public $tries = 5;
-    public $timeout = 3600;
+    public $timeout = 3600 * 15;
     public  $backoff = 10;
 
     /**

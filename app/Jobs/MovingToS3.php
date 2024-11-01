@@ -13,7 +13,7 @@ class MovingToS3 implements ShouldQueue
 {
     use Queueable;
     public $tries = 5;
-    public $timeout = 3600;
+    public $timeout = 3600 * 2;
     public  $backoff = 10;
 
     /**
