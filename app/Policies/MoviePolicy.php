@@ -21,7 +21,7 @@ class MoviePolicy
      */
     public function view(User $user, Movie $movie): bool
     {
-        return $movie->groups()->get()->contains($user->group);
+        return $movie->groups()->count() === 0 || $movie->groups()->get()->contains($user->group);
     }
 
     /**
