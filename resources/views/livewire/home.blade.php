@@ -5,10 +5,10 @@
             <div class="flex flex-col gap-10">
                 <div class="flex items-center justify-between w-full">
                     <div id="movieList">
-                        <div wire:loading.delay.longer>
+                        <div wire:loading.delay.longer wire:target="search">
                             Recherche en cours...
                         </div>
-                        <div wire:loading.remove.delay.longer class="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 justify-start gap-5 flex-nowrap w-full p-4">
+                        <div wire:loading.remove.delay.longer wire:target="search" class="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 justify-start gap-5 flex-nowrap w-full p-4">
                             @foreach($filteredMovies as $movie)
                                 <x-ui.card class="cursor-pointer" :h3="$movie->title" :image="Storage::disk('s3')->temporaryUrl($movie->image, now()->addMinutes())" wire:click="seeDetails({{$movie->id}})"></x-ui.card>
                             @endforeach
