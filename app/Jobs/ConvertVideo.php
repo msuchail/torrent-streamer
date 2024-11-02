@@ -25,7 +25,7 @@ class ConvertVideo implements ShouldQueue
         $this->convertAll();
 
         //On déplace le fichier dans le S3
-        MovingToS3::dispatch($this->movie);
+        MovingToS3::dispatchSync($this->movie);
     }
 
     /**

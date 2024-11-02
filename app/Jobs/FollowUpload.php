@@ -83,7 +83,7 @@ class FollowUpload implements ShouldQueue
         error_log('3');
 
         // On convertit le fichier
-        ConvertVideo::dispatch($this->movie);
+        ConvertVideo::dispatchSync($this->movie);
     }
 
 
