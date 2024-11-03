@@ -16,11 +16,6 @@ class MovieObserver
     public function created(Movie $movie): void
     {
         $movie->update(['environment' => config('app.env')]);
-        $torrent = Transmission::add(torrent: '/'.$movie->torrent, savepath: '/downloads/complete/'.$movie->id);
-
-        $movie->update([
-            'torrent_id' => $torrent->getId(),
-        ]);
 
         FollowUpload::dispatch($movie);
     }

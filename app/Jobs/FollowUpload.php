@@ -31,6 +31,13 @@ class FollowUpload implements ShouldQueue
      */
     public function handle(): void
     {
+        $torrent = Transmission::add(torrent: '/'.$this->movie->torrent, savepath: '/downloads/complete/'.$this->movie->id);
+
+        $this->movie->update([
+            'torrent_id' => $torrent->getId(),
+        ]);
+
+
         //On déplace l'image dans le S3
         $fileName = collect(explode('/', $this->movie->image))->last();
         Storage::disk('s3')->put($this->movie->storagePath.'/'.$fileName, Storage::get($this->movie->image));

@@ -82,6 +82,9 @@ class MovieResource extends Resource
             ->filters([
                 //
             ])
+            ->bulkActions([
+                Tables\Actions\DeleteBulkAction::make(),
+            ])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
