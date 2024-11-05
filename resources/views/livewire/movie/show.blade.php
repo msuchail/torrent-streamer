@@ -25,7 +25,7 @@
                 const player = videojs('video', {
                     html5: {
                         vhs: {
-                            overrideNative: !videojs.browser.IS_SAFARI
+                            overrideNative: true,
                         },
                         nativeAudioTracks: false,
                         nativeVideoTracks: false
