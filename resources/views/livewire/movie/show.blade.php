@@ -23,13 +23,7 @@
                 document.getElementById('video-container').append(video);
 
                 const player = videojs('video', {
-                    html5: {
-                        vhs: {
-                            overrideNative: true,
-                        },
-                        nativeAudioTracks: false,
-                        nativeVideoTracks: false
-                    },
+
                     fluid: true,
                     controls: true,
                     language: 'fr',
