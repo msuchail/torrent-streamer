@@ -25,7 +25,7 @@
     </div>
     @if($modal)
         <div>
-            <div class="fixed top-0 left-0 bg-black/80 h-screen w-full flex justify-center items-center" wire:click="closeModal">
+            <div class="fixed top-0 left-0 bg-black/80 h-screen w-full flex justify-center items-center" wire:click.self="closeModal">
                 <div class="p-5 bg-slate-950 ring-1 ring-indigo-600 2xl:rounded-2xl h-screen 2xl:h-fit 2xl:w-2/3">
                     <div class="flex justify-between items-center">
                         <h2>{{ $selectedMovie->title }}</h2>
