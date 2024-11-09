@@ -1,4 +1,5 @@
 <div x-data="page">
+    <x-slot name="title">{{ $movie->title }}</x-slot>
     <div id="video-container" class="rounded-xl overflow-hidden"></div>
     <div class="hidden md:block">
         <h1>

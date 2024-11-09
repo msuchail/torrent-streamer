@@ -31,7 +31,7 @@ class FollowUpload implements ShouldQueue
      */
     public function handle(): void
     {
-        $torrent = Transmission::add(torrent: '/'.$this->movie->torrent, savepath: '/downloads/complete/'.$this->movie->video->id);
+        $torrent = Transmission::add(torrent: '/'.$this->movie->torrent, savepath: $this->movie->video->path);
 
         $this->movie->update([
             'torrent_id' => $torrent->getId(),
@@ -40,9 +40,9 @@ class FollowUpload implements ShouldQueue
 
         //On déplace l'image dans le S3
         $fileName = collect(explode('/', $this->movie->image))->last();
-        Storage::disk('s3')->put($this->movie->video->id.'/'.$fileName, Storage::get($this->movie->image));
+        Storage::disk('s3')->put($this->movie->video->path.'/'.$fileName, Storage::get($this->movie->image));
         Storage::delete($this->movie->image);
-        $this->movie->update(['image' => $this->movie->video->id.'/'.$fileName]);
+        $this->movie->update(['image' => $this->movie->video->path.'/'.$fileName]);
 
         try {
             do {
