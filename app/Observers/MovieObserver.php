@@ -15,7 +15,7 @@ class MovieObserver
      */
     public function created(Movie $movie): void
     {
-        $movie->video()->create(['path' => "downloads/complete/{$movie->id}"]);
+        $movie->video()->create();
         $movie->update(['environment' => config('app.env')]);
 
         FollowUpload::dispatch($movie);
@@ -51,8 +51,9 @@ class MovieObserver
         }
 
         Storage::delete($movie->torrent);
-        Storage::disk('public')->deleteDirectory('downloads/complete/'.$movie->id);
-        Storage::disk('s3')->deleteDirectory('downloads/complete/'.$movie->id);
+        Storage::disk('public')->deleteDirectory($movie->video->path);
+        Storage::disk('s3')->deleteDirectory($movie->video->path);
+        $movie->video->delete();
     }
 
     /**

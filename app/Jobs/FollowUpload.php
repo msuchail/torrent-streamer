@@ -31,7 +31,7 @@ class FollowUpload implements ShouldQueue
      */
     public function handle(): void
     {
-        $torrent = Transmission::add(torrent: '/'.$this->movie->torrent, savepath: '/downloads/complete/'.$this->movie->id);
+        $torrent = Transmission::add(torrent: '/'.$this->movie->torrent, savepath: '/downloads/complete/'.$this->movie->video->id);
 
         $this->movie->update([
             'torrent_id' => $torrent->getId(),
@@ -40,16 +40,16 @@ class FollowUpload implements ShouldQueue
 
         //On déplace l'image dans le S3
         $fileName = collect(explode('/', $this->movie->image))->last();
-        Storage::disk('s3')->put($this->movie->storagePath.'/'.$fileName, Storage::get($this->movie->image));
+        Storage::disk('s3')->put($this->movie->video->id.'/'.$fileName, Storage::get($this->movie->image));
         Storage::delete($this->movie->image);
-        $this->movie->update(['image' => $this->movie->storagePath.'/'.$fileName]);
+        $this->movie->update(['image' => $this->movie->video->id.'/'.$fileName]);
 
         try {
             do {
                 $torrent = Transmission::get($this->movie->torrent_id);
                 $this->movie->update(['status' => 'downloading '. ($torrent->getPercentDone()) . '%']);
                 sleep(2);
-            } while (!Storage::disk('public')->exists($this->movie->storagePath));
+            } while (!Storage::disk('public')->exists($this->movie->video->path));
             Transmission::remove($torrent);
             Storage::delete($this->movie->torrent);
         } catch (\Exception $e) {
@@ -59,7 +59,7 @@ class FollowUpload implements ShouldQueue
 
 
         // On tri les fichiers pour garder le premier fichier vidéo
-        $allFiles = collect(Storage::disk('public')->files(directory: $this->movie->storagePath, recursive: true));
+        $allFiles = collect(Storage::disk('public')->files(directory: $this->movie->video->path, recursive: true));
         $isFirst = true;
         $file = $allFiles->filter(function($file) use (&$isFirst) {
             if (!$isFirst) {
@@ -75,12 +75,12 @@ class FollowUpload implements ShouldQueue
                 return false;
             }
         })->first();
-        Storage::disk('public')->move($file, $this->movie->storagePath.'/input.'.collect(explode('.', $file))->last());
+        Storage::disk('public')->move($file, $this->movie->video->path.'/input.'.collect(explode('.', $file))->last());
         error_log('1');
-        $file = collect(Storage::disk('public')->files(directory: $this->movie->storagePath, recursive: false))->first();
+        $file = collect(Storage::disk('public')->files(directory: $this->movie->video->path, recursive: false))->first();
         error_log('1.1');
         error_log('2');
-        collect(Storage::disk('public')->directories($this->movie->storagePath))->each(function($dir) {
+        collect(Storage::disk('public')->directories($this->movie->video->path))->each(function($dir) {
             $shortDir = collect(explode('/', $dir))->last();
 
             if(!in_array($shortDir, ['video', 'audio', 'srt'])) {

@@ -14,7 +14,5 @@ class TestController extends Controller
      */
     public function __invoke(Request $request)
     {
-        dd(Storage::disk('s3')->files('downloads/complete/4'));
-        dd(Auth::user()->groupes()->getRelation('movies')->get());
     }
 }

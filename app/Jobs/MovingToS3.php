@@ -31,15 +31,15 @@ class MovingToS3 implements ShouldQueue
     {
         $this->movie->update(['status' => 'moving to S3']);
         //On supprime input.mkv
-        Storage::disk('public')->delete($this->movie->storagePath.'/input.mkv');
+        Storage::disk('public')->delete($this->movie->video->path.'/input.mkv');
 
         //On déplace tout  dans le S3
-        $allFiles = collect(Storage::disk('public')->files(directory: $this->movie->storagePath, recursive: true))->each(function($file) {
+        $allFiles = collect(Storage::disk('public')->files(directory: $this->movie->video->path, recursive: true))->each(function($file) {
             Storage::disk('s3')->put($file, Storage::disk('public')->get($file));
         });
 
         //On supprime tout dans le public
-        Storage::disk('public')->deleteDirectory($this->movie->storagePath);
+        Storage::disk('public')->deleteDirectory($this->movie->video->path);
 
         $this->movie->update(['status' => 'done']);
     }

@@ -21,8 +21,8 @@ class MovieResource extends Resource
     {
         $movie = $form->getRecord();
         if (isset($movie)) {
-            $imageStorage = Storage::disk('s3')->exists($movie?->storagePath ?? '') ? 's3' : 'local';
-            $imageDirectory = $imageStorage === 's3' ? $movie->storagePath : 'images';
+            $imageStorage = Storage::disk('s3')->exists($movie?->video->path ?? '') ? 's3' : 'local';
+            $imageDirectory = $imageStorage === 's3' ? $movie->video->path : 'images';
         } else {
             $imageDirectory = 'images';
             $imageStorage = 'local';
