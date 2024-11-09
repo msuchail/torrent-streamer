@@ -15,6 +15,7 @@ class MovieObserver
      */
     public function created(Movie $movie): void
     {
+        $movie->video()->create(['path' => "downloads/complete/{$movie->id}"]);
         $movie->update(['environment' => config('app.env')]);
 
         FollowUpload::dispatch($movie);

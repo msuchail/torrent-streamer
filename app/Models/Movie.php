@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 #[ObservedBy(MovieObserver::class)]
 class Movie extends Model
@@ -20,12 +20,6 @@ class Movie extends Model
         return $query->where('status', 'done');
     }
 
-    public function videoUrl(): Attribute
-    {
-        return new Attribute(function () {
-            return Storage::disk('s3')->url("downloads/complete/{$this->id}/master.m3u8");
-        });
-    }
     public function storagePath(): Attribute
     {
         return new Attribute(function () {
@@ -35,5 +29,9 @@ class Movie extends Model
     public function groups(): BelongsToMany
     {
         return $this->belongsToMany(Group::class, 'movie_groups');
+    }
+    public function video(): MorphOne
+    {
+        return $this->morphOne(Video::class, 'watchable');
     }
 }

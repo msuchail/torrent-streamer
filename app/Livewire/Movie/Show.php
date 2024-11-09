@@ -22,15 +22,17 @@ class Show extends Component
     }
     public function mount()
     {
-        $this->videoUrl = $this->movie->videoUrl;
-        $this->subtitles = collect(Storage::disk('s3')->files($this->movie->storagePath.'/srt', true))
+        $this->videoUrl = route('video.master', [$this->movie->video->id]);
+
+        $this->subtitles = collect(Storage::disk('s3')->files($this->movie->video->path.'/srt', true))
             ->map(function($file, $key) {
                 $fileName = collect(explode('/', $file))->last();
                 $lang = explode('.', $fileName)[0];
                 $forced = explode('.', $fileName)[2] === 'forced';
                 $name = $this->matchingLanguage($lang, $key) . ($forced ? ' (Forcé)' : '');
+
                 return [
-                    'url' => Storage::disk('s3')->url($file),
+                    'url' => route('video.subtitle', [$this->movie->video->id, $fileName]),
                     'forced' => $forced,
                     'name' => $name,
                     'lang' => $fileName
