@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: torrentstream-database
+
+spec:
+  selector:
+    matchLabels:
+      app: torrentstream-database
+  template:
+    metadata:
+      labels:
+        app: torrentstream-database
+    spec:
+      containers:
+        - name: torrentstream-datab
+          image: mysql:latest
+          ports:
+            - containerPort: 3306
+          envFrom:
+            - secretRef:
+                name: torrentstream-secrets
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: torrentstream-database
+
+spec:
+  selector:
+    app: torrentstream-database
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306

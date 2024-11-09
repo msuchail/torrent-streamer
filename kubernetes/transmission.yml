@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: torrentstream-transmission
+  labels:
+    app: torrentstream-transmission
+
+spec:
+  replicas: 1
+  selector:
+      matchLabels:
+        app: torrentstream-transmission
+  template:
+    metadata:
+      labels:
+        app: torrentstream-transmission
+    spec:
+      containers:
+      - name: torrentstream-transmission
+        image: linuxserver/transmission
+        ports:
+            - containerPort: 9091
+        env:
+            - name: TRANSMISSION_HOST
+              value: "transmission"
+            - name: TRANSMISSION_PORT
+              value: "9091"
+            - name: TRANSMISSION_PATH
+              value: "/transmission/rpc"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: torrentstream-transmission
+spec:
+  type: LoadBalancer
+  ports:
+      - name: transmission
+        port: 9091
+        targetPort: 9091

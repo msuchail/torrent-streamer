@@ -31,7 +31,7 @@ class FollowUpload implements ShouldQueue
      */
     public function handle(): void
     {
-        $torrent = Transmission::add(torrent: '/'.$this->movie->torrent, savepath: $this->movie->video->path);
+        $torrent = Transmission::add(torrent: '/'.$this->movie->torrent, savepath: '/'.$this->movie->video->path);
 
         $this->movie->update([
             'torrent_id' => $torrent->getId(),
