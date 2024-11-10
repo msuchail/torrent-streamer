@@ -35,9 +35,10 @@ class SerieResource extends Resource
                     ->required()
                     ->columnSpanFull(),
                 Forms\Components\Select::make('status')
+                    ->visibleOn('update')
                     ->options([
-                        'draft' => 'Draft',
-                        'published' => 'Published',
+                        'draft' => 'draft',
+                        'published' => 'published',
                     ])
                     ->default('draft')
                     ->required(),
