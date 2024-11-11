@@ -20,13 +20,13 @@ class VideoController extends Controller
     {
         $segmentNumber = str_replace('prog_index', '', explode('.', $segment)[0]);
 
-        if(!in_array($segmentNumber, ["", 0, 1, 2, 3])) {
+        if(!in_array($segmentNumber, ["", 0, 1, 2])) {
             Watching::updateOrCreate(
                 [
                     'user_id' => auth()->id(),
                     'video_id' => $video->id,
                 ],
-                ['segment' => $segmentNumber - 3]
+                ['segment' => $segmentNumber - 2]
             );
         }
 
