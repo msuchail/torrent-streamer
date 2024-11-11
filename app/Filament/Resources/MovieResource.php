@@ -20,13 +20,6 @@ class MovieResource extends Resource
     public static function form(Form $form): Form
     {
         $movie = $form->getRecord();
-        if (isset($movie)) {
-            $imageStorage = Storage::disk('s3')->exists($movie?->video->path ?? '') ? 's3' : 'local';
-            $imageDirectory = $imageStorage === 's3' ? $movie->video->path : 'images';
-        } else {
-            $imageDirectory = 'images';
-            $imageStorage = 'local';
-        }
 
 
         return $form
@@ -38,9 +31,9 @@ class MovieResource extends Resource
                     ->acceptedFileTypes(['application/x-bittorrent'])
                     ->required(),
                 Forms\Components\FileUpload::make('image')
-                    ->disk($imageStorage)
+                    ->disk("s3")
                     ->image()
-                    ->directory($imageDirectory)
+                    ->directory("images")
                     ->previewable()
                     ->imageCropAspectRatio('16:9')
                     ->required(),

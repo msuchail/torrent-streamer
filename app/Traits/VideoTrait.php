@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 
-use App\Models\Movie;
+use App\Models\Video;
 use Illuminate\Support\Facades\Storage;
 
 trait VideoTrait
@@ -22,12 +22,12 @@ trait VideoTrait
 
 
     public function __construct(
-        private readonly Movie $movie,
+        private readonly Video $video,
         private readonly int   $segmentDuration = 60
     ){
-        $this->storagePath = $this->movie->video->path;
+        $this->storagePath = $this->video->path;
         $this->hlsFormat = "-f hls -hls_time $this->segmentDuration -hls_list_size 0";
-        $this->path = "storage/app/public/downloads/complete/{$this->movie->video->id}";
+        $this->path = "storage/app/public/downloads/complete/{$this->video->id}";
         $this->baseFile = $this->path . '/' . collect(explode('/', collect(Storage::disk('public')->files($this->storagePath))->first()))->last();
     }
 
@@ -43,8 +43,6 @@ trait VideoTrait
     public function convertVideo(): void
     {
         Storage::disk('public')->makeDirectory("$this->storagePath/video");
-        error_log($this->baseFile);
-        error_log($this->path);
         $codec = trim(shell_exec("ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of default=noprint_wrappers=1:nokey=1 '$this->baseFile'"));
         $codec = in_array($codec, self::compatibleVideoCodecs) ? "copy" : self::defaultVideoCodec;
         shell_exec("ffmpeg -i '$this->baseFile' -map 0:v:0 -c:v $codec $this->hlsFormat '{$this->path}/video/prog_index.m3u8' -y");

@@ -2,7 +2,7 @@
 
 namespace App\Observers;
 
-use App\Jobs\FollowUpload;
+use App\Jobs\DownloadTorrent;
 use App\Models\Movie;
 use Illuminate\Support\Facades\Storage;
 use TransmissionPHP\Facades\Transmission;
@@ -15,10 +15,8 @@ class MovieObserver
      */
     public function created(Movie $movie): void
     {
-        $movie->video()->create();
         $movie->update(['environment' => config('app.env')]);
-
-        FollowUpload::dispatch($movie);
+        DownloadTorrent::dispatch($movie);
     }
 
     /**
@@ -41,19 +39,20 @@ class MovieObserver
     public function deleted(Movie $movie): void
     {
         try {
-            $torrent = Transmission::get($movie->torrent_id ?? 0);
-            $incompletePath = 'downloads/incomplete/'.$torrent->getName();
-            Storage::disk('public')->deleteDirectory($incompletePath);
-            Storage::disk('public')->delete($incompletePath);
-            Transmission::remove($torrent);
+
+            $torrent = Transmission::get($movie->torrent_id);
+
+            Transmission::remove($torrent, true);
         } catch (\Exception $e) {
-            //
+            // do nothing
         }
 
-        Storage::delete($movie->torrent);
-        Storage::disk('public')->deleteDirectory($movie->video->path);
-        Storage::disk('s3')->deleteDirectory($movie->video->path);
-        $movie->video->delete();
+
+        if(isset($movie->video))
+        {
+            $movie->video->delete();
+        }
+        Storage::disk('s3')->delete($movie->image);
     }
 
     /**

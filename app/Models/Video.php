@@ -2,8 +2,12 @@
 
 namespace App\Models;
 
+use App\Observers\VideoObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+
+#[ObservedBy(VideoObserver::class)]
 
 class Video extends Model
 {
@@ -15,5 +19,9 @@ class Video extends Model
         return Attribute::make(
             get: fn() => "downloads/complete/{$this->id}"
         );
+    }
+    public function watchable()
+    {
+        return $this->morphTo();
     }
 }
