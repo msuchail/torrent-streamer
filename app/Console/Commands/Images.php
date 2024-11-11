@@ -36,7 +36,7 @@ class Images extends Command
 
         $images->each(function ($image) {
             $name = collect(explode('/', $image))->last();
-            Storage::move($image, 'images/' . $name);
+            Storage::disk('s3')->move($image, 'images/' . $name);
             Movie::firstWhere('image', $image)->update(['image' => 'images/' . $name]);
         });
     }
