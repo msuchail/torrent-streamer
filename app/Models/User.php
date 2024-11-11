@@ -7,6 +7,7 @@ use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -66,5 +67,10 @@ class User extends Authenticatable implements FilamentUser
     public function isAdmin()
     {
         return Auth::user()->email === config('filament.admin_email');
+    }
+
+    public function watching(): HasMany
+    {
+        return $this->hasMany(Watching::class);
     }
 }

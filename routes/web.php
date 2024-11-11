@@ -45,6 +45,16 @@ Route::middleware(['auth', 'active'])->group(function () {
     });
 
 
+    Route::prefix("video/{video}")->controller(\App\Http\Controllers\VideoController::class)->name('video.')->group(function () {
+        Route::get('master.m3u8', 'master')->name('master');
+        Route::get('video/{segment}', 'video')->name('video');
+        Route::get('audio/{piste}/{segment}', 'audio')->name('audio');
+        Route::get('srt/{piste}', 'subtitle')->name('subtitle');
+    });
+
+    Route::get('test', \App\Http\Controllers\TestController::class)->middleware(['admin']);
+    Route::get('inactive', \App\Livewire\Inactive::class)->name('inactive');
+
     Route::get('email/verify', Verify::class)
         ->middleware('throttle:6,1')
         ->name('verification.notice');
@@ -62,14 +72,3 @@ Route::middleware('auth')->group(function () {
         ->name('logout');
 });
 
-Route::get('inactive', \App\Livewire\Inactive::class)->name('inactive')->middleware(['auth', 'active']);
-
-Route::get('test', \App\Http\Controllers\TestController::class)->middleware(['auth', 'admin']);
-
-
-Route::prefix("video/{video}")->middleware(['auth'])->controller(\App\Http\Controllers\VideoController::class)->name('video.')->group(function () {
-    Route::get('master.m3u8', 'master')->name('master');
-    Route::get('video/{segment}', 'video')->name('video');
-    Route::get('audio/{piste}/{segment}', 'audio')->name('audio');
-    Route::get('srt/{piste}', 'subtitle')->name('subtitle');
-});

@@ -15,6 +15,8 @@ class Show extends Component
     public array $subtitles = [];
     public string $videoUrl = '';
 
+    public int $initialSegment;
+
 
     public function render()
     {
@@ -22,6 +24,8 @@ class Show extends Component
     }
     public function mount()
     {
+        $this->initialSegment = auth()->user()->watching()->where('video_id', $this->movie->video->id)->first()?->segment ?? 0;
+
         $this->videoUrl = route('video.master', [$this->movie->video->id]);
 
         $this->subtitles = collect(Storage::disk('s3')->files($this->movie->video->path.'/srt', true))

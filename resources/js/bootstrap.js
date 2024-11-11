@@ -23,3 +23,7 @@ window.videojs = videojs;
 import "video.js/dist/video-js.css";
 import '@videojs/themes/dist/fantasy/index.css';
 
+
+import Swal from "sweetalert2/dist/sweetalert2.min.js";
+import "@sweetalert2/theme-dark/dark.css";
+window.Swal = Swal;

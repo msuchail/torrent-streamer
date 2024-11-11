@@ -24,7 +24,6 @@
                 document.getElementById('video-container').append(video);
 
                 const player = videojs('video', {
-
                     fluid: true,
                     controls: true,
                     language: 'fr',
@@ -35,6 +34,31 @@
                     src: $wire.videoUrl,
                     type: "application/x-mpegURL",
                 });
+                // Swal.fire({
+                //     title: 'Bienvenue',
+                //     text: 'Appuyez sur la barre d\'espace pour mettre en pause ou reprendre la lecture. Appuyez sur les flèches gauche et droite pour reculer ou avancer de 10 secondes. Appuyez sur les flèches haut et bas pour augmenter ou diminuer le volume. Appuyez sur la touche F pour activer le mode plein écran.',
+                //     icon: 'info',
+                //     confirmButtonText: 'Compris',
+                // })
+
+                if($wire.initialSegment > 0) {
+                    Swal.fire({
+                        title: 'Reprise de la lecture',
+                        text: 'Voulez-vous reprendre la lecture là où vous vous étiez arrêté ?',
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonText: 'Oui',
+                        cancelButtonText: 'Non',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            player.currentTime($wire.initialSegment*60);
+                            player.play()
+                        } else {
+                            player.play()
+                        }
+                    });
+                }
+
 
                 // Keyboard shortcuts
                 player.on('keydown', (event) => {
@@ -72,10 +96,6 @@
                         label: subtitle.name,
                     });
                 });
-                document.querySelector('.vjs-big-play-button').click();
-                document.querySelector('.vjs-fullscreen-control').click();
-
-
             },
             destroy() {
                 videojs('video').dispose();

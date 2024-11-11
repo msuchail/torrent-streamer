@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Video extends Model
 {
-    protected $fillable = ['watchable_id', 'watchable_type'];
+    protected $fillable = ['watchable_id', 'watchable_type', 'segments_number'];
 
 
     protected function path(): Attribute
