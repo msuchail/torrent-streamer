@@ -52,7 +52,7 @@ class Show extends Component
                 $name = $this->matchingLanguage($lang, $key) . ($forced ? ' (Forcé)' : '');
 
                 return [
-                    'url' => route('video.subtitle', [$this->movie->video->id, $fileName]),
+                    'url' => route('video.subtitle', [$this->episode->video->id, $fileName]),
                     'forced' => $forced,
                     'name' => $name,
                     'lang' => $fileName
