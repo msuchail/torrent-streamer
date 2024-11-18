@@ -64,7 +64,7 @@
                                 </div>
                                 @isset($selectedSeason)
                                     <div class="flex gap-5 justify-end">
-                                        <a href="{{ route('serie.show', [$selectedSerie->id, 'season' => $selectedSeason->id, 'episode' => 1]) }}" wire:navigate class="">
+                                        <a href="{{ route('serie.show', [$selectedSerie->id, 'seasonId' => $selectedSeason->id, 'episodeId' => $selectedSeason->episodes()->first()->id]) }}" wire:navigate class="">
                                             <x-filament::button class="hidden 2xl:block bg-indigo-800 hover:bg-indigo-600 rounded-xl">Regarder</x-filament::button>
                                         </a>
                                     </div>
@@ -73,7 +73,7 @@
                         </div>
                     </div>
                     @isset($selectedSeason)
-                        <a href="{{ route('serie.show', [$selectedSerie->id, 'seasonId' => $selectedSeason->id, 'episodeId' => $selectedSeason->episodes->first->id]) }}" wire:navigate class="2xl:hidden fixed bottom-10 w-full flex justify-center">
+                        <a href="{{ route('serie.show', [$selectedSerie->id, 'seasonId' => $selectedSeason->id, 'episodeId' => $selectedSeason->episodes()->first()->id]) }}" wire:navigate class="2xl:hidden fixed bottom-10 w-full flex justify-center">
                             <x-filament::button class="bg-indigo-800 hover:bg-indigo-600 md:w-fit px-12 w-2/3 rounded-xl">Regarder</x-filament::button>
                         </a>
                     @endisset
