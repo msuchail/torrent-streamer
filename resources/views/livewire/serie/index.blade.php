@@ -42,9 +42,9 @@
                                     <div class="flex items-center gap-3 mt-5 md:flex-nowrap flex-wrap sm:mb-0 mb-3">
                                         @isset($selectedSeason)
                                             <h3 class="sm:block">Saisons disponibles</h3>
-                                            <x-filament::tabs class="bg-transparent mx-0 ring-slate-800 h-7">
+                                            <x-filament::tabs class="!bg-transparent mx-0 ring-slate-800 h-7">
                                                 @foreach($selectedSerie->seasons->where("status", "done") as $key=>$season)
-                                                    <x-filament::tabs.item wire:key="{{ $key }}" class="bg-transparent" active="{{ $selectedSeason->id === $season->id }}" wire:click="setSelectedSeason('{{ $season->id }}')">
+                                                    <x-filament::tabs.item wire:key="{{ $key }}" class="!bg-transparent" active="{{ $selectedSeason->id === $season->id }}" wire:click="setSelectedSeason('{{ $season->id }}')">
                                                         Saison {{ $key + 1 }}
                                                     </x-filament::tabs.item>
                                                 @endforeach
@@ -73,7 +73,7 @@
                         </div>
                     </div>
                     @isset($selectedSeason)
-                        <a href="{{ route('serie.show', [$selectedSerie->id, $selectedSeason->id, $selectedSeason->episodes->first->id]) }}" wire:navigate class="2xl:hidden fixed bottom-10 w-full flex justify-center">
+                        <a href="{{ route('serie.show', [$selectedSerie->id, 'seasonId' => $selectedSeason->id, 'episodeId' => $selectedSeason->episodes->first->id]) }}" wire:navigate class="2xl:hidden fixed bottom-10 w-full flex justify-center">
                             <x-filament::button class="bg-indigo-800 hover:bg-indigo-600 md:w-fit px-12 w-2/3 rounded-xl">Regarder</x-filament::button>
                         </a>
                     @endisset
