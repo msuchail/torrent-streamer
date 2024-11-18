@@ -28,7 +28,8 @@ class ManageSeasonFiles implements ShouldQueue
     public function handle(): void
     {
         $allFiles = collect(Storage::disk('public')->files(directory: $this->temporaryPath, recursive: true));
-        $this->season->update(['status', 'converting']);
+        $this->season->update(["status" => "converting"]);
+        $this->season->save();
 
         $episodes = $allFiles->filter(function ($file) {
             $ext = collect(explode('.', $file))->last();
@@ -45,7 +46,7 @@ class ManageSeasonFiles implements ShouldQueue
             ConvertVideo::dispatchSync($video);
         });
         Storage::delete($this->temporaryPath);
-        $this->season->update(['status', 'done']);
+        $this->season->update(["status" => "done"]);
     }
 
 

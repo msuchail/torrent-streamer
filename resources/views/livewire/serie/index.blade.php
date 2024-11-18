@@ -40,31 +40,43 @@
                                     <h3 class="mt-5 sm:mt-0">Description de la série</h3>
                                     <p>{{ $selectedSerie->description }}</p>
                                     <div class="flex items-center gap-3 mt-5 md:flex-nowrap flex-wrap sm:mb-0 mb-3">
-                                        <h3 class="sm:block">Saisons disponibles</h3>
-                                        <x-filament::tabs class="bg-transparent mx-0 ring-slate-800 h-7">
-                                            @foreach($selectedSerie->seasons->where("status", "done") as $key=>$season)
-                                                <x-filament::tabs.item wire:key="{{ $key }}" class="bg-transparent" active="{{ $selectedSeason->id === $season->id }}" wire:click="setSelectedSeason('{{ $season->id }}')">
-                                                    Saison {{ $key + 1 }}
-                                                </x-filament::tabs.item>
-                                            @endforeach
-                                        </x-filament::tabs>
+                                        @isset($selectedSeason)
+                                            <h3 class="sm:block">Saisons disponibles</h3>
+                                            <x-filament::tabs class="bg-transparent mx-0 ring-slate-800 h-7">
+                                                @foreach($selectedSerie->seasons->where("status", "done") as $key=>$season)
+                                                    <x-filament::tabs.item wire:key="{{ $key }}" class="bg-transparent" active="{{ $selectedSeason->id === $season->id }}" wire:click="setSelectedSeason('{{ $season->id }}')">
+                                                        Saison {{ $key + 1 }}
+                                                    </x-filament::tabs.item>
+                                                @endforeach
+                                            </x-filament::tabs>
+                                        @endisset
                                     </div>
+                                    @isset($selectedSeason)
                                     <div class="grid sm:grid-cols-12 gap-5 mt-2">
                                         <img src="{{ \Illuminate\Support\Facades\Storage::disk("s3")->temporaryUrl($selectedSeason->image, now()->addMinutes()) }}" alt="" class="sm:col-span-4">
                                         <p class="sm:col-span-8"><span class="font-semibold">{{$selectedSeason->title}} : </span>{{ $selectedSeason->description }}</p>
                                     </div>
+                                    @else
+                                        <div class="w-full">
+                                            <x-ui.alert-warning >Aucune saison disponible</x-ui.alert-warning>
+                                        </div>
+                                    @endisset
                                 </div>
-                                <div class="flex gap-5 justify-end">
-                                    <a href="{{ route('serie.show', [$selectedSerie->id, 'season' => $selectedSeason->id, 'episode' => 1]) }}" wire:navigate class="">
-                                        <x-filament::button class="hidden 2xl:block bg-indigo-800 hover:bg-indigo-600 rounded-xl">Regarder</x-filament::button>
-                                    </a>
-                                </div>
+                                @isset($selectedSeason)
+                                    <div class="flex gap-5 justify-end">
+                                        <a href="{{ route('serie.show', [$selectedSerie->id, 'season' => $selectedSeason->id, 'episode' => 1]) }}" wire:navigate class="">
+                                            <x-filament::button class="hidden 2xl:block bg-indigo-800 hover:bg-indigo-600 rounded-xl">Regarder</x-filament::button>
+                                        </a>
+                                    </div>
+                                @endisset
                             </div>
                         </div>
                     </div>
-                    <a href="{{ route('serie.show', [$selectedSerie->id, $selectedSeason->id, $selectedSeason->episodes->first->id]) }}" wire:navigate class="2xl:hidden fixed bottom-10 w-full flex justify-center">
-                        <x-filament::button class="bg-indigo-800 hover:bg-indigo-600 md:w-fit px-12 w-2/3 rounded-xl">Regarder</x-filament::button>
-                    </a>
+                    @isset($selectedSeason)
+                        <a href="{{ route('serie.show', [$selectedSerie->id, $selectedSeason->id, $selectedSeason->episodes->first->id]) }}" wire:navigate class="2xl:hidden fixed bottom-10 w-full flex justify-center">
+                            <x-filament::button class="bg-indigo-800 hover:bg-indigo-600 md:w-fit px-12 w-2/3 rounded-xl">Regarder</x-filament::button>
+                        </a>
+                    @endisset
                 </div>
             </div>
         @endif
