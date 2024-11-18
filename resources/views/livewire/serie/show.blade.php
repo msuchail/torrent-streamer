@@ -6,15 +6,15 @@
             <h1 class="col-span-8">
                 {{ $serie->title }}
             </h1>
-            <x-filament::input.wrapper class="bg-transparent ring-0 col-span-2">
-                <x-filament::input.select wire:model.live="seasonId" class="rounded-xl">
+            <x-filament::input.wrapper class="!bg-transparent ring-0 col-span-2">
+                <x-filament::input.select wire:model.live="seasonId" class="!bg-transparent rounded-xl">
                     @foreach($serie->seasons->where('status', 'done') as $key=>$season)
                         <option value="{{ $season->id }}">Saison {{ $key + 1 }}</option>
                     @endforeach
                 </x-filament::input.select>
             </x-filament::input.wrapper>
-            <x-filament::input.wrapper class="bg-transparent ring-0 col-span-2">
-                <x-filament::input.select wire:model.live="episodeId"  class="rounded-xl">
+            <x-filament::input.wrapper class=":bg-transparent ring-0 col-span-2">
+                <x-filament::input.select wire:model.live="episodeId"  class="!bg-transparent rounded-xl">
                     @foreach($season->episodes as $key=>$episode)
                         <option value="{{ $episode->id }}">Episode {{ $key + 1 }}</option>
                     @endforeach
