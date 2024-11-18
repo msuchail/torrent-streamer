@@ -70,8 +70,8 @@
         @endif
 
     @else
-        <x-ui.alert-warning title="Aucun film disponible actuellement">
-            Il n'y a aucun film disponible actuellement, veuillez réessayer plus tard.
+        <x-ui.alert-warning title="Aucune série disponible actuellement">
+            Il n'y a aucune série disponible actuellement, veuillez réessayer plus tard.
         </x-ui.alert-warning>
     @endisset
 </div>
