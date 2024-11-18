@@ -34,8 +34,12 @@ class SerieResource extends Resource
                 Forms\Components\Textarea::make('description')
                     ->required()
                     ->columnSpanFull(),
+                Forms\Components\Select::make('groups')
+                    ->relationship(titleAttribute: 'name')
+                    ->preload()
+                    ->multiple(),
                 Forms\Components\Select::make('status')
-                    ->visibleOn('update')
+                    ->visibleOn('edit')
                     ->options([
                         'draft' => 'draft',
                         'published' => 'published',
@@ -78,6 +82,7 @@ class SerieResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make()
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

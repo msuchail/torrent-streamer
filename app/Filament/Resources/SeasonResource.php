@@ -39,9 +39,9 @@ class SeasonResource extends Resource
                     ->required()
                     ->maxLength(255),
                 Forms\Components\FileUpload::make('image')
-                    ->disk('s3')
+                    ->disk("s3")
                     ->image()
-                    ->directory('images')
+                    ->directory("images")
                     ->previewable()
                     ->imageCropAspectRatio('16:9')
                     ->required(),
@@ -87,6 +87,7 @@ class SeasonResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make()
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

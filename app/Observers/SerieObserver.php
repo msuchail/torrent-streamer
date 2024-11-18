@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Models\Serie;
+use Illuminate\Support\Facades\Storage;
 
 class SerieObserver
 {
@@ -11,7 +12,7 @@ class SerieObserver
      */
     public function created(Serie $serie): void
     {
-        //
+        $serie->update(['environment' => config('app.env')]);
     }
 
     /**
@@ -26,6 +27,11 @@ class SerieObserver
      * Handle the Serie "deleted" event.
      */
     public function deleted(Serie $serie): void
+    {
+        Storage::disk('s3')->delete($serie->image);
+    }
+
+    public function deleting(Serie $serie): void
     {
         $serie->seasons->each(fn($season) => $season->delete());
     }

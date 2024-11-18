@@ -39,10 +39,16 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::get('/', \App\Livewire\Home::class)->name('home');
 
 
-    Route::group(['prefix' => 'movie'], function () {
-        Route::get('/', \App\Livewire\Movie\Index::class)->name('movie');
-        Route::get('/{movie}', \App\Livewire\Movie\Show::class)->name('movie.show');
+    Route::name('movie.')->prefix('movies')->group(function () {
+        Route::get('/', \App\Livewire\Movie\Index::class)->name('index');
+        Route::get('/{movie}', \App\Livewire\Movie\Show::class)->name('show');
     });
+
+    Route::name('serie.')->prefix('series')->group(function () {
+        Route::get('/', \App\Livewire\Serie\Index::class)->name('index');
+        Route::get('/{serie}', \App\Livewire\Serie\Show::class)->name('show');
+    });
+
 
 
     Route::prefix("video/{video}")->controller(\App\Http\Controllers\VideoController::class)->name('video.')->group(function () {

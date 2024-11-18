@@ -16,12 +16,20 @@
     <div class="relative min-h-screen bg-center bg-dots bg-gray-900 selection:bg-indigo-500 text-white">
         <header>
             <div class="justify-end pt-3 container mx-auto flex flex-col gap-5 pb-5">
-                <nav class="flex justify-between items-center">
+                <nav class="grid grid-cols-3 items-center">
                     <a href="{{ route('home') }}" class="flex items-center gap-5" wire:navigate>
                         <img src="{{ asset('images/logo.png') }}" alt="" class="h-12">
                         <span class="hidden md:block text-3xl">TorrentStream</span>
                     </a>
-                    <ul class="flex gap-5">
+
+                    @auth
+                        <ul class="flex gap-5 justify-center">
+                            <li><a wire:navigate href="{{ route('movie.index') }}">Films</a></li>
+                            <li><a wire:navigate href="{{ route('serie.index') }}">Séries</a></li>
+                        </ul>
+                    @endauth
+
+                    <ul class="flex gap-5 justify-end">
                         @auth
                             <li><a href="{{ route('logout') }}">Se déconnecter</a></li>
                         @else

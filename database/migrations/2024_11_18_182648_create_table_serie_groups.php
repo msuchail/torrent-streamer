@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('seasons', function (Blueprint $table) {
-            $table->string('image')->nullable()->change();
+        Schema::create('serie_groups', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+            $table->foreignId('serie_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('group_id')->constrained()->cascadeOnDelete();
         });
     }
 
@@ -21,8 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('seasons', function (Blueprint $table) {
-            $table->string('image')->change();
-        });
+        //
     }
 };

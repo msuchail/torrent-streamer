@@ -5,6 +5,7 @@ namespace App\Observers;
 use App\Jobs\DownloadTorrent;
 use App\Models\Season;
 use Illuminate\Support\Facades\Storage;
+use TransmissionPHP\Facades\Transmission;
 
 class SeasonObserver
 {
@@ -31,13 +32,32 @@ class SeasonObserver
         }
     }
 
+
+    public function deleting(Season $season): void
+    {
+        $season->episodes()->each(fn($episode) => $episode->delete());
+    }
+
     /**
      * Handle the Season "deleted" event.
      */
     public function deleted(Season $season): void
     {
+        try {
+
+            $torrent = Transmission::get($season->torrent_id);
+
+            Transmission::remove($torrent, true);
+        } catch (\Exception $e) {
+            // do nothing
+        }
+
+
+        if(isset($season->video))
+        {
+            $season->video->delete();
+        }
         Storage::disk('s3')->delete($season->image);
-        $season->episodes->each(fn ($episode) => $episode->delete());
     }
 
     /**
