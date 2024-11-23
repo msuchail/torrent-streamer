@@ -45,7 +45,7 @@ class ManageSeasonFiles implements ShouldQueue
             Storage::disk('public')->move($file, $video->path.'/input.'.collect(explode('.', $file))->last());
             ConvertVideo::dispatchSync($video);
         });
-        Storage::delete($this->temporaryPath);
+//        Storage::delete($this->temporaryPath);
         $this->season->update(["status" => "done"]);
     }
 

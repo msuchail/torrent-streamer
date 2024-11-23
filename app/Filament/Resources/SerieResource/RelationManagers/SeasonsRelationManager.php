@@ -32,6 +32,7 @@ class SeasonsRelationManager extends RelationManager
             ->recordTitleAttribute('title')
             ->columns([
                 Tables\Columns\TextColumn::make('title'),
+                Tables\Columns\TextColumn::make('status'),
             ])
             ->filters([
                 //
@@ -47,6 +48,6 @@ class SeasonsRelationManager extends RelationManager
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])->poll('2s');
     }
 }

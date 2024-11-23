@@ -73,4 +73,9 @@ class User extends Authenticatable implements FilamentUser
     {
         return $this->hasMany(Watching::class);
     }
+
+    public function playlists(): HasMany
+    {
+        return $this->hasMany(Playlist::class);
+    }
 }

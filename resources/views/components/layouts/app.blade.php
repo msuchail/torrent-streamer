@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="bg-gray-900">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,8 +24,8 @@
 
                     @auth
                         <ul class="flex gap-5 justify-center">
-                            <li><a wire:navigate href="{{ route('movie.index') }}">Films</a></li>
-                            <li><a wire:navigate href="{{ route('serie.index') }}">Séries</a></li>
+                            <li><a wire:navigate href="{{ route('movie.index') }}" class="{{ !str_contains(\Illuminate\Support\Facades\Route::getCurrentRoute()->getName(), 'movie') ? 'text-gray-500' : '' }}">Films</a></li>
+                            <li><a wire:navigate href="{{ route('serie.index') }}" class="{{ !str_contains(\Illuminate\Support\Facades\Route::getCurrentRoute()->getName(), 'serie') ? 'text-gray-500' : '' }}">Séries</a></li>
                         </ul>
                     @endauth
 
