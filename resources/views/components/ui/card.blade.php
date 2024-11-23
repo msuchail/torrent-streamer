@@ -6,7 +6,7 @@
     <div class="w-full group hover:scale-105">
         <div href="{{ $href }}" class="relative">
             <div>
-                <x-heroicon-c-eye class="absolute top-2 right-2 h-7 z-[100] {{ $masced ? 'hover:visible invisible' : 'visible hover:invisible' }}" />
+{{--                <x-heroicon-c-eye class="absolute top-2 right-2 h-7 z-[100] {{ $masced ? 'hover:visible invisible' : 'visible hover:invisible' }}" />--}}
                 {{--            <x-heroicon-o-eye-slash class="absolute top-2 right-2 h-7 z-50 {{ $masced ? 'hidden hover:visible' : 'hover:hidden' }}" />--}}
             </div>
             @isset($image)
