@@ -21,6 +21,7 @@ window.videojs = videojs;
 
 
 import "video.js/dist/video-js.css";
+import "@silvermine/videojs-chromecast"
 import '@videojs/themes/dist/fantasy/index.css';
 
 

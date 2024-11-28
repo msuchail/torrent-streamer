@@ -20,6 +20,7 @@
         "vite": "^5.0"
     },
     "dependencies": {
+        "@silvermine/videojs-chromecast": "^1.5.0",
         "@sweetalert2/theme-dark": "^5.0.18",
         "@videojs/themes": "^1.0.1",
         "sweetalert2": "^11.14.5"

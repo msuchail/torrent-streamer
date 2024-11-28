@@ -10,7 +10,7 @@
                 <x-filament::input.wrapper class="!bg-transparent !ring-0 col-span-2">
                     <x-filament::input.select wire:model.live="seasonId" class="!bg-transparent rounded-xl">
                         @foreach($watchable->seasons->where('status', 'done') as $key=>$season)
-                            <option value="{{ $season->id }}">Saison {{ $key + 1 }}</option>
+                            <option value="{{ $season->id }}">Saison {{ $season->order }}</option>
                         @endforeach
                     </x-filament::input.select>
                 </x-filament::input.wrapper>

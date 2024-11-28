@@ -19,19 +19,14 @@ class SeasonsRelationManager extends RelationManager
     public function form(Form $form): Form
     {
         return $form
-            ->schema([
-                Forms\Components\TextInput::make('title')
-                    ->required()
-                    ->maxLength(255),
-            ]);
+            ->schema([]);
     }
 
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('title')
             ->columns([
-                Tables\Columns\TextColumn::make('title'),
+                Tables\Columns\TextColumn::make('created_at'),
                 Tables\Columns\TextColumn::make('status'),
             ])
             ->filters([
@@ -48,6 +43,6 @@ class SeasonsRelationManager extends RelationManager
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ])->poll('2s');
+            ])->poll('2s')->reorderable('order')->defaultSort('order');
     }
 }

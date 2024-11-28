@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\SeasonResource\Pages;
 use App\Filament\Resources\SeasonResource\RelationManagers\EpisodesRelationManager;
 use App\Models\Season;
+use App\Models\Serie;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -35,9 +36,6 @@ class SeasonResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('title')
-                    ->required()
-                    ->maxLength(255),
                 Forms\Components\FileUpload::make('image')
                     ->disk("s3")
                     ->image()
@@ -54,6 +52,7 @@ class SeasonResource extends Resource
                 Forms\Components\Textarea::make('description')
                     ->required()
                     ->columnSpanFull(),
+                Forms\Components\TextInput::make('order')->numeric()->required()
             ])->columns(1);
     }
 
@@ -69,8 +68,6 @@ class SeasonResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('title')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('status')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('torrent')
@@ -93,7 +90,7 @@ class SeasonResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])->reorderable('order');
     }
 
     public static function getRelations(): array

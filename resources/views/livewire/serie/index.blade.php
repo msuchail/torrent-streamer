@@ -45,7 +45,7 @@
                                             <x-filament::tabs class="!bg-transparent mx-0 ring-slate-800 h-7">
                                                 @foreach($selectedSerie->seasons->where("status", "done") as $key=>$season)
                                                     <x-filament::tabs.item wire:key="{{ $key }}" class="!bg-transparent" active="{{ $selectedSeason->id === $season->id }}" wire:click="setSelectedSeason('{{ $season->id }}')">
-                                                        Saison {{ $key + 1 }}
+                                                        Saison {{ $season->order }}
                                                     </x-filament::tabs.item>
                                                 @endforeach
                                             </x-filament::tabs>

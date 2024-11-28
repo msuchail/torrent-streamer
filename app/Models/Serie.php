@@ -28,7 +28,7 @@ class Serie extends Model
 
     public function seasons(): HasMany
     {
-        return $this->hasMany(Season::class);
+        return $this->hasMany(Season::class)->orderBy('order');
     }
 
     public function scopeActive()

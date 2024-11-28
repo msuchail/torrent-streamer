@@ -17,9 +17,9 @@ class Season extends Model
         'image',
         'torrent',
         'torrent_id',
-        'title',
         'description',
         'status',
+        'order'
     ];
 
     public function groups(): BelongsToMany
