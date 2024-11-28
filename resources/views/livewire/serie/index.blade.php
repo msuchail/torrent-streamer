@@ -54,7 +54,7 @@
                                     @isset($selectedSeason)
                                     <div class="grid sm:grid-cols-12 gap-5 mt-2">
                                         <img src="{{ \Illuminate\Support\Facades\Storage::disk("s3")->temporaryUrl($selectedSeason->image, now()->addMinutes()) }}" alt="" class="sm:col-span-4">
-                                        <p class="sm:col-span-8"><span class="font-semibold">{{$selectedSeason->title}} : </span>{{ $selectedSeason->description }}</p>
+                                        <p class="sm:col-span-8"><span class="font-semibold">{{$selectedSeason}} : </span>{{ $selectedSeason->description }}</p>
                                     </div>
                                     @else
                                         <div class="w-full">

@@ -27,7 +27,7 @@
             @php($activeSeason = \App\Models\Season::find($seasonId))
             @php($activeEpisode = \App\Models\Episode::find($episodeId))
             <h3>
-                {{ $activeSeason->title }} : {{ $activeEpisode->title }}
+                {{ $activeSeason->order }} : {{ $activeEpisode->title }}
             </h3>
             <p>
                 {{ $activeSeason->description }}
