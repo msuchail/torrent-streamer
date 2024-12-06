@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Episode;
 use App\Models\Movie;
 use App\Models\Season;
 use App\Models\Serie;
@@ -32,7 +33,9 @@ class Reprise extends Command
     {
         Serie::all()->each(function (Serie $serie) {
             $serie->seasons()->each(function (Season $season, $key) {
-                $season->update(['order' => $key]);
+                $season->episodes()->each(function (Episode $episode, $key) {
+                    $episode->update(['title' => "Episode " . $key]);
+                });
             });
         });
     }

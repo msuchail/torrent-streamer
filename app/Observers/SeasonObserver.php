@@ -14,7 +14,7 @@ class SeasonObserver
      */
     public function created(Season $season): void
     {
-        $season->update(['order' => $season->serie->seasons->count()+1]);
+        $season->update(['order' => $season->serie->seasons->count()]);
         $season->update(['environment' => config('app.env')]);
         DownloadTorrent::dispatch($season);
     }

@@ -52,7 +52,6 @@ class SeasonResource extends Resource
                 Forms\Components\Textarea::make('description')
                     ->required()
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('order')->numeric()->required()
             ])->columns(1);
     }
 
