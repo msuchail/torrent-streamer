@@ -43,7 +43,32 @@ class Show extends Component
         $this->initialSegment = auth()->user()->watching()->where('video_id', $this->episode->video->id)->first()?->segment ?? 0;
 
         $this->setVideoUrl();
+        $this->setSubtitles();
+    }
 
+    public function updated($propertyName) {
+        if($propertyName == 'seasonId') {
+            $this->season = Season::find($this->seasonId);
+            $this->episode = $this->season->episodes->first();
+            $this->episodeId = $this->episode->id;
+            $this->setVideoUrl();
+            $this->dispatch("video-changed");
+        }
+
+        if($propertyName == 'episodeId') {
+            $this->episode = Episode::find($this->episodeId);
+            $this->setVideoUrl();
+            $this->setSubtitles();
+            $this->dispatch("video-changed");
+        }
+    }
+
+    private function setVideoUrl() : void
+    {
+        $this->videoUrl = route('video.master', [$this->episode->video->id]);
+    }
+    private function setSubtitles(): void
+    {
         $this->subtitles = collect(Storage::disk('s3')->files($this->episode->video->path.'/srt', true))
             ->map(function($file, $key) {
                 $fileName = collect(explode('/', $file))->last();
@@ -59,26 +84,5 @@ class Show extends Component
                 ];
             })->values()
             ->toArray();
-    }
-
-    public function updated($propertyName) {
-        if($propertyName == 'seasonId') {
-            $this->season = Season::find($this->seasonId);
-            $this->episode = $this->season->episodes->first();
-            $this->episodeId = $this->episode->id;
-            $this->setVideoUrl();
-            $this->dispatch("video-changed");
-        }
-
-        if($propertyName == 'episodeId') {
-            $this->episode = Episode::find($this->episodeId);
-            $this->setVideoUrl();
-            $this->dispatch("video-changed");
-        }
-    }
-
-    private function setVideoUrl() : void
-    {
-        $this->videoUrl = route('video.master', [$this->episode->video->id]);
     }
 }

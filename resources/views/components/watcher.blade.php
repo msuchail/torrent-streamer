@@ -40,7 +40,6 @@
 <script>
     Alpine.data('page', () => ({
         initPlayer() {
-            console.log("shfjsqfgf")
             const video = document.createElement('video');
             video.setAttribute('id', 'video');
             video.setAttribute(
