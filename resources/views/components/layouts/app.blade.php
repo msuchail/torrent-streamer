@@ -28,15 +28,16 @@
                             <li><a wire:navigate href="{{ route('serie.index') }}" class="{{ !str_contains(\Illuminate\Support\Facades\Route::getCurrentRoute()->getName(), 'serie') ? 'text-gray-500' : '' }}">Séries</a></li>
                         </ul>
                     @endauth
-
-                    <ul class="flex gap-5 justify-end">
-                        @auth
-                            <li><a href="{{ route('logout') }}">Se déconnecter</a></li>
-                        @else
-                            <li><a href="{{ route('login') }}">Se connecter</a></li>
-                            <li><a href="{{ route('register') }}">S'inscrire</a></li>
-                        @endauth
-                    </ul>
+                    @if(!isset($hideMenu))
+                        <ul class="flex gap-5 justify-end">
+                            @auth
+                                <li><a href="{{ route('logout') }}">Se déconnecter</a></li>
+                            @else
+                                <li><a href="{{ route('login') }}">Se connecter</a></li>
+                                <li><a href="{{ route('register') }}">S'inscrire</a></li>
+                            @endauth
+                        </ul>
+                    @endif
                 </nav>
                 {{ $headerExtras ?? '' }}
             </div>

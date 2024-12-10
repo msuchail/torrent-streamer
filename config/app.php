@@ -119,8 +119,9 @@ return [
     */
 
     'maintenance' => [
-        'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
+        'driver' => env('APP_MAINTENANCE_DRIVER', 'cache'),
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
+        'message' => env('APP_MAINTENANCE_MESSAGE', 'Application en maintenance. Veuillez revenir plus tard'),
     ],
 
 ];
