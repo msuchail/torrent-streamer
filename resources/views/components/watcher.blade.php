@@ -52,7 +52,7 @@
                 fluid: true,
                 controls: true,
                 language: 'fr',
-                playbackRates: [0.5, 1, 1.5, 2],
+                playbackRates: [0.5, 1, 1.5, 2, 2.5, 3],
             })
 
             player.src({
