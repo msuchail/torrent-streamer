@@ -16,6 +16,14 @@
 //     forceTLS: true
 // });
 
+import videojs from "video.js";
+window.videojs = videojs;
+
+
+import "video.js/dist/video-js.css";
+import "@silvermine/videojs-chromecast"
+import '@videojs/themes/dist/fantasy/index.css';
+
 
 import Swal from "sweetalert2/dist/sweetalert2.min.js";
 import "@sweetalert2/theme-dark/dark.css";

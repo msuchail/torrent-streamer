@@ -53,18 +53,8 @@
                 controls: true,
                 language: 'fr',
                 playbackRates: [0.5, 1, 1.5, 2, 2.5, 3],
-                techOrder: [ 'chromecast', 'html5' ], // You may have more Tech, such as Flash or HLS
-                plugins: {
-                    chromecast:{
-                        buttonPositionIndex: 18,
-                        modifyLoadRequestFn: function (loadRequest) { // HLS support
-                            loadRequest.media.hlsSegmentFormat = 'ts';
-                            loadRequest.media.hlsVideoSegmentFormat = 'ts';
-                            return loadRequest;
-                        }
-                    }
-                }
             })
+
             player.src({
                 src: $wire.videoUrl,
                 type: "application/x-mpegURL",
