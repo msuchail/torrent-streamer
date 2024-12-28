@@ -51,12 +51,14 @@ class Show extends Component
             $this->season = Season::find($this->seasonId);
             $this->episode = $this->season->episodes->first();
             $this->episodeId = $this->episode->id;
+            $this->initialSegment = auth()->user()->watching()->where('video_id', $this->episode->video->id)->first()?->segment ?? 0;
             $this->setVideoUrl();
             $this->dispatch("video-changed");
         }
 
         if($propertyName == 'episodeId') {
             $this->episode = Episode::find($this->episodeId);
+            $this->initialSegment = auth()->user()->watching()->where('video_id', $this->episode->video->id)->first()?->segment ?? 0;
             $this->setVideoUrl();
             $this->setSubtitles();
             $this->dispatch("video-changed");
