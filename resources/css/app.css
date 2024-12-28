@@ -21,7 +21,7 @@
     .container {
         @apply px-3 md:px-10
     }
-    option, optgroup {
-        -webkit-appearance: none;
+    option {
+        @apply dark:bg-slate-800;
     }
 }
