@@ -1,4 +1,4 @@
-<div x-data="home">
+<div>
     <x-slot name="title">TorrentStream</x-slot>
     @isset($selectedSerie)
         <div class="gap-12">
