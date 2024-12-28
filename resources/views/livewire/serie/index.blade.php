@@ -10,7 +10,7 @@
                         </div>
                         <div wire:loading.remove.delay.longer wire:target="search" class="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 justify-start gap-5 flex-nowrap w-full p-4">
                             @foreach($paginatedSeries as $serie)
-                                <x-ui.card :mascable="true" class="cursor-pointer" :h3="$serie->title" :image="Storage::disk('s3')->temporaryUrl($serie->image, now()->addMinutes())" wire:click="seeDetails({{$serie->id}})"></x-ui.card>
+                                <x-ui.card wire:key="{{ $serie->id }}" :mascable="true" class="cursor-pointer" :h3="$serie->title" :image="Storage::disk('s3')->temporaryUrl($serie->image, now()->addMinutes())" wire:click="seeDetails({{$serie->id}})"></x-ui.card>
                             @endforeach
                         </div>
                     </div>
