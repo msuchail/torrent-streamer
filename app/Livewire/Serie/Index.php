@@ -7,9 +7,11 @@ use App\Models\Serie;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
+    use WithPagination;
     public Collection $series;
     public ?Serie $selectedSerie;
     public Collection $filteredSeries;
@@ -20,7 +22,9 @@ class Index extends Component
 
     public function render()
     {
-        return view('livewire.serie.index');
+        return view('livewire.serie.index', [
+            'paginatedSeries' => $this->filteredSeries->isNotEmpty() ? $this->filteredSeries->toQuery()->paginate(8) : collect(),
+        ]);
     }
 
     public function mount()
@@ -46,6 +50,7 @@ class Index extends Component
     }
     public function updatedSearch()
     {
+        $this->resetPage();
         $this->filteredSeries = $this->series->filter(function ($serie) {
             return str_contains(strtolower($serie->title), strtolower($this->search));
         });

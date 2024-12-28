@@ -1,4 +1,4 @@
-<div x-data="home" x-on:keyup.escape="closeSerie">
+<div x-data="home">
     <x-slot name="title">TorrentStream</x-slot>
     @isset($selectedSerie)
         <div class="gap-12">
@@ -9,7 +9,7 @@
                             Recherche en cours...
                         </div>
                         <div wire:loading.remove.delay.longer wire:target="search" class="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 justify-start gap-5 flex-nowrap w-full p-4">
-                            @foreach($filteredSeries as $serie)
+                            @foreach($paginatedSeries as $serie)
                                 <x-ui.card :mascable="true" class="cursor-pointer" :h3="$serie->title" :image="Storage::disk('s3')->temporaryUrl($serie->image, now()->addMinutes())" wire:click="seeDetails({{$serie->id}})"></x-ui.card>
                             @endforeach
                         </div>
@@ -18,10 +18,12 @@
             </div>
         </div>
         <div class="fixed w-full bottom-0 flex justify-center left-0 py-5 bg-slate-950">
-            <div class="container mx-auto ">
+            <div class="container mx-auto flex flex-col gap-5">
                 <x-filament::input wire:model.live="search" type="search" placeholder="Rechercher un film..." class="h-10 rounded-full bg-slate-800" />
+                @if($paginatedSeries->isNotEmpty())
+                    {{ $paginatedSeries->links("vendor.livewire.tailwind") }}
+                @endif
             </div>
-
         </div>
         @if($modal)
             <div>
@@ -87,9 +89,3 @@
         </x-ui.alert-warning>
     @endisset
 </div>
-@script
-<script>
-    Alpine.data('home', () => ({
-    }));
-</script>
-@endscript

@@ -1,4 +1,4 @@
-<div x-data="home" x-on:keyup.escape="closeMovie">
+<div>
     <x-slot name="title">TorrentStream</x-slot>
     @isset($selectedMovie)
         <div class="gap-12">
@@ -9,17 +9,23 @@
                             Recherche en cours...
                         </div>
                         <div wire:loading.remove.delay.longer wire:target="search" class="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 justify-start gap-5 flex-nowrap w-full p-4">
-                            @foreach($filteredMovies as $movie)
+                            @foreach($paginatedMovies as $movie)
                                 <x-ui.card class="cursor-pointer" :h3="$movie->title" :image="Storage::disk('s3')->temporaryUrl($movie->image, now()->addMinutes())" wire:click="seeDetails({{$movie->id}})"></x-ui.card>
                             @endforeach
                         </div>
                     </div>
                 </div>
             </div>
+            @if($paginatedMovies->isEmpty())
+                <x-ui.alert-warning title="Aucun résultat" />
+            @endif
         </div>
         <div class="fixed w-full bottom-0 flex justify-center left-0 py-5 bg-slate-950">
-            <div class="container mx-auto ">
+            <div class="container mx-auto flex flex-col gap-5">
                 <x-filament::input wire:model.live="search" type="search" placeholder="Rechercher un film..." class="h-10 rounded-full bg-slate-800" />
+                @if($paginatedMovies->isNotEmpty())
+                    {{ $paginatedMovies->links("vendor.livewire.tailwind") }}
+                @endif
             </div>
 
         </div>
@@ -58,9 +64,3 @@
         </x-ui.alert-warning>
     @endisset
 </div>
-@script
-<script>
-    Alpine.data('home', () => ({
-    }));
-</script>
-@endscript
