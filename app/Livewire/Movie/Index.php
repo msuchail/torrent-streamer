@@ -23,7 +23,7 @@ class Index extends Component
         return view(
             'livewire.movie.index',
             [
-                'paginatedMovies' =>  $this->filteredMovies->isNotEmpty() ? $this->filteredMovies->toQuery()?->paginate(8) : collect()
+                'paginatedMovies' =>  $this->filteredMovies->isNotEmpty() ? $this->filteredMovies->toQuery()?->orderByDesc('id')->paginate(8) : collect()
             ]
         );
     }
@@ -33,6 +33,7 @@ class Index extends Component
         $movies = Movie::active()->get()->filter(function ($movie) {
             return Auth::user()->can('view', $movie);
         });
+
         $this->fill([
             'movies' => $movies,
             'filteredMovies' => $movies,

@@ -23,7 +23,7 @@ class Index extends Component
     public function render()
     {
         return view('livewire.serie.index', [
-            'paginatedSeries' => $this->filteredSeries->isNotEmpty() ? $this->filteredSeries->toQuery()->paginate(8) : collect(),
+            'paginatedSeries' => $this->filteredSeries->isNotEmpty() ? $this->filteredSeries->toQuery()?->orderByDesc('id')->paginate(8) : collect(),
         ]);
     }
 
