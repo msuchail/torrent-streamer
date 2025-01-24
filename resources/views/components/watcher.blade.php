@@ -16,7 +16,7 @@
                 </x-filament::input.wrapper>
                 <x-filament::input.wrapper class="!bg-transparent !ring-0 col-span-2">
                     <x-filament::input.select wire:model.live="episodeId"  class="!bg-transparent rounded-xl">
-                        @foreach($season->episodes as $key=>$episode)
+                        @foreach($activeSeason->episodes as $key=>$episode)
                             <option value="{{ $episode->id }}">Episode {{ $key + 1 }}</option>
                         @endforeach
                     </x-filament::input.select>
