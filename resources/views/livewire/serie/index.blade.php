@@ -19,7 +19,7 @@
         </div>
         <div class="fixed w-full bottom-0 flex justify-center left-0 py-5 bg-slate-950">
             <div class="container mx-auto flex flex-col gap-5">
-                <x-filament::input wire:model.live="search" type="search" placeholder="Rechercher un film..." class="h-10 rounded-full bg-slate-800" />
+                <x-filament::input wire:model.live="search" type="search" placeholder="Rechercher une série..." class="h-10 rounded-full bg-slate-800" />
                 @if($paginatedSeries->isNotEmpty())
                     {{ $paginatedSeries->links("vendor.livewire.tailwind") }}
                 @endif
