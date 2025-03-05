@@ -38,17 +38,18 @@
 </div>
 @script
 <script>
+    let player
     Alpine.data('page', () => ({
         initPlayer() {
             const video = document.createElement('video');
             video.setAttribute('id', 'video');
             video.setAttribute(
                 'class',
-                'w-full video-js',
+                'w-full video-js vjs-big-play-centered',
             );
             document.getElementById('video-container').append(video);
 
-            const player = videojs('video', {
+            player = videojs('video', {
                 fluid: true,
                 controls: true,
                 language: 'fr',
@@ -81,6 +82,7 @@
                     } else {
                         player.play()
                     }
+                    this.setPreferedTracks()
                 });
             }
 
@@ -113,6 +115,12 @@
                 }
             });
 
+            player.on("play", () => {
+                if(player.currentTime() === 0) {
+                    this.setPreferedTracks()
+                }
+            });
+
             $wire.subtitles.forEach(subtitle => {
                 player.addRemoteTextTrack({
                     kind: 'subtitles',
@@ -121,6 +129,30 @@
                     label: subtitle.name,
                 });
             });
+
+            const audioTracks = player.audioTracks()
+            // Listen to the "change" event.
+            audioTracks.addEventListener('change', function() {
+                // Log the currently enabled AudioTrack label.
+                for (let i = 0; i < audioTracks.length; i++) {
+                    let track = audioTracks[i];
+
+                    if (track.enabled) {
+                        localStorage.setItem("preferedAudioTrack", track.label)
+                        return;
+                    }
+                }
+            });
+            const textTracks = player.textTracks()
+            textTracks.addEventListener('change', function () {
+                for (let i = 0; i < textTracks.length; i++) {
+                    let track = textTracks[i];
+                    if (track.mode === "showing") {
+                        localStorage.setItem("preferedTextTrack", track.label)
+                        return;
+                    }
+                }
+            })
         },
         init() {
             this.initPlayer()
@@ -134,6 +166,28 @@
         },
         destroy() {
             videojs('video').dispose();
+        },
+        setPreferedTracks() {
+            const preferedAudioTrack = localStorage.getItem('preferedAudioTrack')
+            const audioTracks = player.audioTracks()
+            const textTracks = player.textTracks()
+
+            if(preferedAudioTrack)
+            {
+                for (let i = 0; i < audioTracks.length; i++) {
+                    const track = audioTracks[i];
+                    track.enabled = track.label === preferedAudioTrack;
+                }
+            }
+
+            const preferedTextTrack = localStorage.getItem('preferedTextTrack')
+            if(preferedTextTrack)
+            {
+                for (let i = 0; i < textTracks.length; i++) {
+                    const track = textTracks[i];
+                    track.mode = track.label === preferedTextTrack ? "showing" : "disabled";
+                }
+            }
         }
     }));
 </script>

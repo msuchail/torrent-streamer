@@ -34,6 +34,7 @@ class VideoController extends Controller
     }
     public function audio(Video $video, int $piste, string $segment)
     {
+
         return Storage::disk('s3')->download("$video->path/audio/$piste/$segment");
     }
     public function subtitle(Video $video, string $piste)
